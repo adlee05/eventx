@@ -6,7 +6,7 @@ const RSVPSchema = new Schema(
     event: {type: Schema.Types.ObjectId,ref: "Event",required: true,},
     status: {type: String,enum: ["going", "interested", "not-going"],default: "going", },
   },
-  { timestamps: true }
+  { timestamps: true}
 );
 
 export const RSVPModel = model("RSVP", RSVPSchema);
