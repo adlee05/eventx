@@ -25,7 +25,7 @@ async function login(req, res) {
     })
   }
 
-  // get user userDetails post validation
+  // get userDetails post validation
   let details;
   try {
     details = await UserModel.findOne({ email: req.body.email }, 'username email password role');
