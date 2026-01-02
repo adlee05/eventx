@@ -15,6 +15,7 @@ const envs = {
   mongo_uri: process.env.MONGO_URL,
   jwt_secret: process.env.JWT_SECRET,
   port: process.env.PORT,
+  mongo_local: process.env.MONGO_LOCAL
 }
 
 export default envs;
