@@ -4,25 +4,35 @@ import { UserModel } from "../models/user.ts";;
 import * as z from 'zod';
 import envs from "../config/index.ts";
 
+// type 
+import type { Request, Response } from "express";
+
 // login zod schema
 const zodLogin = z.object({
   email: z.string().email(),
   password: z.string().trim().min(8, "Password too short.")
 });
 
-async function login(req, res) {
+// cookie options
+const cookieOpts = {
+  httpOnly: true,
+  secure: envs.env_type == "prod",
+  sameSite: "strict" as const,
+}
+
+async function login(req: Request, res: Response) {
   //validate input
   const result = zodLogin.safeParse({
     email: req.body.email,
     password: req.body.password
-  })
+  });
 
   if (!result.success) {
     console.log(result.error);
     return res.status(400).json({
       message: "Credentials do not conform to rules",
       error: result.error.format(),
-    })
+    });
   }
 
   // get userDetails post validation
@@ -54,10 +64,12 @@ async function login(req, res) {
     { expiresIn: "7d" }
   );
 
-  return res.status(200).json({
-    message: "Login successful",
-    jwt: token
-  })
+  res.cookie("auth_token", token, {
+    ...cookieOpts,
+    maxAge: 60 * 60 * 24 * 7 * 1000
+  });
+
+  return res.status(200).send("login successful, token sent");
 }
 
 // signup zod schema
@@ -67,7 +79,7 @@ const zodSignUp = z.object({
   password: z.string().trim().min(8, "Password too short.")
 });
 
-async function signup(req, res) {
+async function signup(req: Request, res: Response) {
   const userDetails = {
     username: req.body.username,
     email: req.body.email,
@@ -95,7 +107,21 @@ async function signup(req, res) {
     })
 
     await user.save();
-    res.status(200).send("User created successfully");
+
+    const token = jwt.sign({
+      userId: user._id,
+      role: user.role
+    }, envs.jwt_secret, {
+      expiresIn: "7d"
+    });
+
+    // set token
+    res.cookie("auth_token", token, {
+      ...cookieOpts,
+      maxAge: 60 * 60 * 24 * 7 * 1000
+    });
+
+    res.status(200).send("User created successfully, token sent");
 
   } catch (e) {
     console.log(e);
