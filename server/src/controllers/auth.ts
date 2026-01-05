@@ -18,6 +18,7 @@ const cookieOpts = {
   httpOnly: true,
   secure: envs.env_type == "prod",
   sameSite: "strict" as const,
+  path: '/'
 }
 
 async function login(req: Request, res: Response) {
@@ -146,4 +147,10 @@ async function signup(req: Request, res: Response) {
   }
 }
 
-export { login, signup };
+async function logout(req: Request, res: Response) {
+  // logout removes the set cookie on client's side
+  res.clearCookie("auth_token", cookieOpts);
+  return res.status(200).send("successfully logged out.");
+}
+
+export { login, signup, logout };
