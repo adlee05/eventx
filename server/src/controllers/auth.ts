@@ -81,7 +81,7 @@ async function login(req: Request, res: Response) {
 
   console.log(`login of user ${req.body.email} successful`);
   return res.status(200).json({
-    message: "Account created successfully.",
+    message: "Logged in successfully.",
     success: true,
   });
 }

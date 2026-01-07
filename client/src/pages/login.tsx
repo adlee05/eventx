@@ -22,11 +22,22 @@ function Login() {
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // post user credentials
-    //   try {
-    //     const res = axios.post('http://localhost:5000/auth/login')
-    //   } catch (e) {
-    //
-    //   }
+    try {
+      const res = await axios.post('http://localhost:5000/auth/login', credentials, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        console.log("login successful!");
+      } else {
+        console.log("login failed!");
+      }
+      console.log(res.data.message);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.log(e.response?.status);
+        console.log(e.response?.data?.message);
+      }
+    }
   };
 
   return (

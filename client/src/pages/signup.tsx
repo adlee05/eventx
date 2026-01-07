@@ -1,5 +1,6 @@
 import AuthCard from "@/components/auth-card.tsx";
-import {useState} from "react";
+import { useState } from "react";
+import axios from "axios";
 // types
 import type { CredType } from "@/types/auth-card";
 
@@ -17,8 +18,25 @@ function SignUp() {
   };
 
   // verify credentials: handle login
-  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp =  async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    try {
+      const res = await axios.post('http://localhost:5000/auth/signup', credentials, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        console.log("signup successful!");
+      } else {
+        console.log("signup failed!");
+      }
+      console.log(res.data.message);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.log(e.response?.status);
+        console.log(e.response?.data?.message);
+      }
+    }
     console.log("signup handled");
   };
 
