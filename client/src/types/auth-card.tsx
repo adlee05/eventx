@@ -3,7 +3,9 @@ type AuthCardProps = {
   description: string,
   fields: Field[],
   onSubmit: React.FormEventHandler<HTMLFormElement>,
+  onChangeElem: React.ChangeEventHandler<HTMLInputElement>,
   type: "Login" | "SignUp",
+  value: CredType,
 }
 
 type CredType = {

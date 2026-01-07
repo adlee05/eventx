@@ -10,22 +10,12 @@ import {
 import { Input } from "../components/ui/input.tsx";
 import { Label } from "../components/ui/label.tsx";
 import { Button } from "../components/ui/button.tsx";
-import { useState } from "react";
-import type { AuthCardProps, CredType } from "@/types/auth-card.tsx";
+import type { AuthCardProps} from "@/types/auth-card.tsx";
+import { Link } from "react-router-dom";
 
 function AuthCard(props: AuthCardProps) {
-  const [credentials, setCredentials] = useState<CredType>({
-    email: "",
-    password: "",
-    username: ""
-  });
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({
-      ...credentials,
-      [event.target.name]: event.target.value
-    })
-  };
+ 
+  const goTo: "signup" | "login" = props.type == "Login" ? "signup" : "login";
 
   return (<>
     <Card className="w-full max-w-sm">
@@ -37,21 +27,23 @@ function AuthCard(props: AuthCardProps) {
           {props.description}
         </CardDescription>
         <CardAction>
-          <Button>{props.type == "Login" ? "Login" : "SignUp"}</Button>
+          <Button asChild>
+            <Link to={`/${goTo}`}>{goTo.charAt(0).toUpperCase() + goTo.slice(1)}</Link>
+          </Button>
         </CardAction>
       </CardHeader>
       <CardContent>
         <form onSubmit={props.onSubmit} className="flex flex-col gap-[30px]">
           {props.fields.map((elem) => (
             <div key={elem} className="flex flex-col gap-[10px]">
-              <Label htmlFor="{elem}">{elem}</Label>
+              <Label htmlFor="{elem}">{elem.charAt(0).toUpperCase() + elem.slice(1)}</Label>
               <Input
                 name={elem}
-                value={credentials[elem]}
-                type={elem}
-                placeholder={elem == "email" ? "adlee05@gmail.com" : ""}
+                value={props.value[elem]}
+                type={elem == "username" ? "text" : elem}
+                placeholder={elem == "email" ? "adlee05@gmail.com" : (elem == "username" ? "adlee05" : "")}
                 required
-                onChange={handleChange}
+                onChange={props.onChangeElem}
               />
             </div>
           ))}
