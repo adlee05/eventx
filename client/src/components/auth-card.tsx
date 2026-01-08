@@ -10,11 +10,11 @@ import {
 import { Input } from "../components/ui/input.tsx";
 import { Label } from "../components/ui/label.tsx";
 import { Button } from "../components/ui/button.tsx";
-import type { AuthCardProps} from "@/types/auth-card.tsx";
+import type { AuthCardProps } from "@/types/auth-card.tsx";
 import { Link } from "react-router-dom";
 
 function AuthCard(props: AuthCardProps) {
- 
+
   const goTo: "signup" | "login" = props.type == "Login" ? "signup" : "login";
 
   return (<>

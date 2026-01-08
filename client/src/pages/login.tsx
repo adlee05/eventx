@@ -1,5 +1,6 @@
 import AuthCard from "@/components/auth-card";
 import { useState } from "react";
+import Notify from "@/components/notification";
 import axios from "axios";
 
 // types
@@ -41,17 +42,19 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center">
-      <AuthCard
-        title="Login to your EventX account"
-        description="Login in with you email and password"
-        type="Login"
-        fields={["email", "password"]}
-        value={credentials}
-        onChangeElem={handleChange}
-        onSubmit={handleLogin}
-      />
-    </div>
+    <>
+      <div className="flex justify-center">
+        <AuthCard
+          title="Login to your EventX account"
+          description="Login in with you email and password"
+          type="Login"
+          fields={["email", "password"]}
+          value={credentials}
+          onChangeElem={handleChange}
+          onSubmit={handleLogin}
+        />
+      </div>
+    </>
   );
 }
 
