@@ -25,7 +25,7 @@ function Login() {
     if (!npProps.isActive) return;
 
     const timer = setTimeout(() => {
-      setNpProps((prev) => ({
+      setNpProps((prev: notifyProp) => ({
         ...prev,
         isActive: false,
       }))

@@ -1,9 +1,10 @@
 import AuthCard from "@/components/auth-card.tsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Notify from "@/components/notification";
 // types
 import type { CredType } from "@/types/auth-card";
+import type { notifyProp } from "@/types/notification";
 
 function SignUp() {
   const [credentials, setCredentials] = useState<CredType>({
@@ -17,6 +18,20 @@ function SignUp() {
     type: "failure",
     isActive: false,
   });
+
+  useEffect(() => {
+    if (!npProps.isActive) return;
+
+    const timer = setTimeout(() => {
+      setNpProps((prev: notifyProp) => ({
+        ...prev,
+        isActive: false,
+      }))
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [npProps.isActive]);
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({
