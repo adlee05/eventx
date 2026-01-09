@@ -1,16 +1,38 @@
 import AuthCard from "@/components/auth-card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Notify from "@/components/notification";
 import axios from "axios";
 
 // types
 import type { CredType } from "@/types/auth-card";
+import type { notifyProp } from "@/types/notification";
 
 function Login() {
   const [credentials, setCredentials] = useState<CredType>({
     email: "",
     password: "",
   });
+
+  const [npProps, setNpProps] = useState<notifyProp>({
+    title: "",
+    description: "",
+    type: "failure",
+    isActive: false,
+  });
+
+  // tracks isActive and triggers when its set to true
+  useEffect(() => {
+    if (!npProps.isActive) return;
+
+    const timer = setTimeout(() => {
+      setNpProps((prev) => ({
+        ...prev,
+        isActive: false,
+      }))
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [npProps.isActive]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({
@@ -29,6 +51,12 @@ function Login() {
       });
       if (res.data.success) {
         console.log("login successful!");
+        setNpProps({
+          title: "Login Successful",
+          description: "You will be redirected shortly.",
+          type: "success",
+          isActive: true,
+        })
       } else {
         console.log("login failed!");
       }
@@ -37,12 +65,24 @@ function Login() {
       if (axios.isAxiosError(e)) {
         console.log(e.response?.status);
         console.log(e.response?.data?.message);
+        setNpProps({
+          title: "Login failed",
+          description: e.response?.data?.message,
+          type: "failure",
+          isActive: true,
+        })
       }
     }
   };
 
   return (
     <>
+      <Notify
+        title={npProps.title}
+        type={npProps.type}
+        description={npProps.description}
+        isActive={npProps.isActive}
+      />
       <div className="flex justify-center">
         <AuthCard
           title="Login to your EventX account"
