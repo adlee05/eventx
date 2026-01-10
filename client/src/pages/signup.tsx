@@ -34,10 +34,10 @@ function SignUp() {
 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({
-      ...credentials,
+    setCredentials((prev) => ({
+      ...prev,
       [event.target.name]: event.target.value
-    })
+    }));
   };
 
   // verify credentials: handle login
@@ -46,8 +46,7 @@ function SignUp() {
     try {
       const res = await axios.post('http://localhost:5000/auth/signup', credentials, {
         withCredentials: true,
-      });
-      if (res.data.success) {
+      }); if (res.data.success) {
         console.log("signup successful!");
         setNpProps({
           title: "SignUp Successful",
@@ -58,6 +57,13 @@ function SignUp() {
 
       } else {
         console.log("signup failed!");
+        setNpProps({
+          title: "SignUp failed",
+          description: res.data.message,
+          type: "failure",
+          isActive: true,
+        })
+
       }
       console.log(res.data.message);
     } catch (e) {

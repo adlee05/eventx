@@ -35,10 +35,10 @@ function Login() {
   }, [npProps.isActive]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({
-      ...credentials,
+    setCredentials((prev) => ({
+      ...prev,
       [event.target.name]: event.target.value
-    })
+    }));
   };
 
   // verify credentials: handle login
@@ -59,6 +59,12 @@ function Login() {
         })
       } else {
         console.log("login failed!");
+        setNpProps({
+          title: "Login failed",
+          description: res.data.message,
+          type: "failure",
+          isActive: true,
+        })
       }
       console.log(res.data.message);
     } catch (e) {
