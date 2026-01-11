@@ -15,7 +15,6 @@ const UserSchema = new Schema(
     lastLogin: { type: Date },
 
     attendedEvents: [{ type: Schema.Types.ObjectId, ref: "Event", },],
-
     savedEvents: [{ type: Schema.Types.ObjectId, ref: "Event", },],
 
     certificates: [{ type: Schema.Types.ObjectId, ref: "Certificate", },],
