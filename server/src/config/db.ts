@@ -1,4 +1,4 @@
-import envs from "./index.ts";
+import envs from "./index.js";
 import mongoose from "mongoose";
 
 async function connectDB() {

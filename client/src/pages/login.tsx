@@ -2,12 +2,15 @@ import AuthCard from "@/components/auth-card";
 import { useState, useEffect } from "react";
 import Notify from "@/components/notification";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // types
 import type { CredType } from "@/types/auth-card";
 import type { notifyProp } from "@/types/notification";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [credentials, setCredentials] = useState<CredType>({
     email: "",
     password: "",
@@ -57,6 +60,8 @@ function Login() {
           type: "success",
           isActive: true,
         })
+
+        navigate('/', {replace: true});
       } else {
         console.log("login failed!");
         setNpProps({

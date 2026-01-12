@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { UserModel } from "../models/user.ts";;
+import { UserModel } from "../models/user.js";
 import * as z from 'zod';
-import envs from "../config/index.ts";
+import envs from "../config/index.js";
 
 // type 
 import type { Request, Response } from "express";
@@ -142,7 +142,7 @@ async function signup(req: Request, res: Response) {
       success: true,
     });
 
-  } catch (e) {
+  } catch (e: Error | undefined) {
     console.log(e);
 
     // differentiate b/w mongodb and bcrypt errors
