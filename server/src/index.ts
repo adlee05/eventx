@@ -25,6 +25,9 @@ app.use(cookieParser());
 // middleware
 app.use('/auth', auth);
 
+//routes
+app.use('/event',eventRoutes);
+
 async function startServer() {
   // connect to the db via mongoose
   try {
