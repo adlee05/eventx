@@ -7,6 +7,8 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+import eventRoutes from "./routes/events.js"
+
 const app = express();
 const PORT = Number(envs.port);
 
