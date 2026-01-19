@@ -181,4 +181,12 @@ async function logout(req: Request, res: Response) {
   });
 }
 
-export { login, signup, logout };
+async function me(req: Request, res: Response) {
+  res.status(200).json({
+    data: req.user,
+    message: "user authenticated successfully.",
+    success: true,
+  })
+}
+
+export { login, signup, logout, me };

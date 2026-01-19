@@ -3,7 +3,7 @@ import './App.css'
 import Login from './pages/login.tsx';
 import SignUp from './pages/signup.tsx';
 import Home from "@/pages/home.tsx";
-import ProtectedRoute from './components/protectedRoute.tsx';
+import ProtectedRoute from './components/ProtectedRoute.tsx';
 
 function App() {
 

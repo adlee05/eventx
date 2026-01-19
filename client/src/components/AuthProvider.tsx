@@ -1,0 +1,39 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { AuthContext } from "@/context/AuthContext.js";
+
+import type { ReactNode } from "react";
+
+interface Props {
+  children: ReactNode;
+}
+
+export function AuthProvider({ children }: Props) {
+  const [AuthStatus, setAuthStatus] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async (): Promise<void> => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/auth/me",
+          { withCredentials: true }
+        );
+
+        if (res.data.success) {
+          setAuthStatus(true);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ AuthStatus, setAuthStatus, loading, setLoading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
