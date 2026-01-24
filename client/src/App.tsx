@@ -1,9 +1,11 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css'
-import Login from './pages/login.tsx';
-import SignUp from './pages/signup.tsx';
-import Home from "@/pages/home.tsx";
-import ProtectedRoute from './components/ProtectedRoute.tsx';
+import Login from './pages/login.jsx';
+import SignUp from './pages/signup.jsx';
+import Home from "@/pages/home.jsx";
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Layout from "@/components/Layout.jsx"
+import Events from "@/pages/events.js";
 
 function App() {
 
@@ -13,8 +15,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
+        <Route element={<Layout />}>
+          <Route path="/events" element={<Events />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+          </Route>
         </Route>
       </Routes>
     </>

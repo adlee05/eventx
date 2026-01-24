@@ -3,6 +3,7 @@ import axios from "axios";
 import Notify from "@/components/notification";
 import { Button } from "@/components/ui/button";
 import { AuthContext } from "@/context/AuthContext";
+
 // types
 import type { notifyProp } from "@/types/notification";
 
@@ -28,7 +29,7 @@ function Home() {
     return () => clearTimeout(timer);
   }, [npProps.isActive]);
 
-
+  // logout handler
   async function handleLogout() {
     try {
       const res = await axios.get('http://localhost:5000/auth/logout', {
@@ -49,6 +50,7 @@ function Home() {
     console.log('action performed');
 
   }
+
   return (<>
     <Notify
       title={npProps.title}
