@@ -3,6 +3,7 @@ import axios from "axios";
 import Notify from "@/components/notification";
 import { Button } from "@/components/ui/button";
 import { AuthContext } from "@/context/AuthContext";
+import { EventCard } from "@/components/EventCard.jsx";
 
 // types
 import type { notifyProp } from "@/types/notification";

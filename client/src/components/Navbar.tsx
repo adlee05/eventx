@@ -44,7 +44,7 @@ export default function NavbarComp() {
           <div className="flex items-center gap-4">
             {AuthStatus ?
               <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
-              : <NavbarButton variant="secondary">Login</NavbarButton>}
+              : <Link to="/login"><NavbarButton variant="secondary">Login</NavbarButton></Link>}
             <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
           </div>
         </NavBody>
@@ -88,7 +88,7 @@ export default function NavbarComp() {
               >
                 Book a call
               </NavbarButton>
-              <ModeToggle />
+              <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
             </div>
           </MobileNavMenu>
         </MobileNav>
