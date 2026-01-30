@@ -6,6 +6,7 @@ import Home from "@/pages/home.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Layout from "@/components/Layout.jsx"
 import Events from "@/pages/events.js";
+import Account from "@/pages/account.js";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/events" element={<Events />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
+            <Route path="/account" element={<Account />} />
           </Route>
         </Route>
       </Routes>

@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { Link } from "react-router-dom";
 
+import Logo from "@/components/Logo"
 import React, { useRef, useState } from "react";
 
 interface NavbarProps {
@@ -242,7 +243,7 @@ export const NavbarLogo = () => {
         width={30}
         height={30}
       />
-      <span className="font-medium text-black dark:text-white">Eventx</span>
+      <span className="font-medium text-black dark:text-white"><Logo /></span>
     </a>
   );
 };
