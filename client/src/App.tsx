@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Layout from "@/components/Layout.jsx"
 import Events from "@/pages/events.js";
 import Account from "@/pages/account.js";
+import Contact from "@/pages/contact.js";
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/contact" element={<Contact />} />
           </Route>
         </Route>
       </Routes>

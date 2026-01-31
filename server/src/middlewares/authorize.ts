@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-function authorize(...allowedRoles: string[]) {
+export default function authorize(...allowedRoles: string[]) {
   // return a middleware used by express
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {

@@ -10,8 +10,12 @@ import type { CredType } from "@/types/auth-card";
 import type { notifyProp } from "@/types/notification";
 
 function Login() {
-  const { setAuthStatus } = useContext(AuthContext);
+  const { setAuthStatus, AuthStatus } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  if (AuthStatus) {
+    navigate('/');
+  }
 
   const [credentials, setCredentials] = useState<CredType>({
     email: "",

@@ -1,15 +1,24 @@
 import AuthCard from "@/components/auth-card.tsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Notify from "@/components/notification";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/context/AuthContext";
+
 // types
 import type { CredType } from "@/types/auth-card";
 import type { notifyProp } from "@/types/notification";
 
 function SignUp() {
+  const { AuthStatus } = useContext(AuthContext);
+  const navigate = useNavigate();
+  if (AuthStatus) {
+    navigate('/');
+  }
   const [credentials, setCredentials] = useState<CredType>({
     email: "",
     password: "",
+    username: ""
   });
 
   const [npProps, setNpProps] = useState<notifyProp>({
