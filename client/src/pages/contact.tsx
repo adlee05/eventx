@@ -37,7 +37,7 @@ export default function Contact() {
 
   return (
     <>
-      <div className=" max-w-3xl flex flex-col p-10 mx-auto">
+      <div className="min-h-screen max-w-4xl flex flex-col p-10 mx-auto">
         <div className="prompt text-center">
           <h1 className="text-3xl font-bold">
             Have Questions? We Have the Answers (Hope so)

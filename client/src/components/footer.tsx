@@ -1,16 +1,43 @@
 import Logo from "@/components/Logo";
 import { Link } from "react-router-dom";
 import { Instagram, Twitter, Youtube, Twitch } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const footerLinks = [
+  {
+    label: "Home",
+    to: '/'
+  },
+  {
+    label: "About",
+    to: '/about'
+  },
+  {
+    label: "Contact",
+    to: '/contact'
+  },
+  {
+    label: "Get Started",
+    to: '/signup'
+  }
+];
+
+// <Button variant="link" asChild>
+//           <Link to='/'>Home</Link>
+//         </Button>
+//         <Link to='/about'>About</Link>
+//         <Link to='/contact'>Contact</Link>
+//         <Link to='/signup'>Get Started</Link>
 
 export default function Footer() {
   return (<>
-    <div className="flex flex-col md:flex-row justify-around items-center gap-4">
-      <div> <Logo /> </div>
-      <div className="links flex justify-center gap-4">
-        <Link to='/'>Home</Link>
-        <Link to='/about'>About</Link>
-        <Link to='/contact'>Contact</Link>
-        <Link to='/signup'>Get Started</Link>
+    <div className="flex flex-col p-10 md:flex-row justify-around items-center gap-4"> <div> <Logo /> </div>
+      <div className="links flex justify-center">
+        {footerLinks.map((elem) => (
+          <Button variant="link" asChild key={elem.label}>
+            <Link to={elem.to}>{elem.label}</Link>
+          </Button>
+        ))}
       </div>
       <div className="socials flex gap-4">
         <Instagram />

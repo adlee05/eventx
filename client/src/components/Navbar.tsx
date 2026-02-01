@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar.js";
 import { Link } from "react-router-dom";
 import {
   Navbar,
@@ -14,6 +13,7 @@ import {
 import { useState, useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { ModeToggle } from "@/components/modeToggle";
+import AvatarComp from "@/components/AvatarComp";
 
 export default function NavbarComp() {
   const { AuthStatus } = useContext(AuthContext);
@@ -44,7 +44,7 @@ export default function NavbarComp() {
           <div className="flex items-center gap-4">
             {AuthStatus ?
               <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
-              : <Link to="/login"><NavbarButton variant="secondary">Login</NavbarButton></Link>}
+              : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
             <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
           </div>
         </NavBody>
@@ -74,20 +74,9 @@ export default function NavbarComp() {
               </Link>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Login
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
-              </NavbarButton>
+              {AuthStatus ?
+                <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
+                : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
               <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
             </div>
           </MobileNavMenu>
@@ -95,15 +84,4 @@ export default function NavbarComp() {
       </Navbar>
     </div>
   );
-}
-
-function AvatarComp() {
-  return <>
-    <Link to='/account'>
-      <Avatar>
-        <AvatarImage src="https://avatars.githubusercontent.com/u/165539819?v=4" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-    </Link>
-  </>;
 }
