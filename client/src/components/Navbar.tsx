@@ -41,7 +41,7 @@ export default function NavbarComp() {
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center">
             {AuthStatus ?
               <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
               : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}

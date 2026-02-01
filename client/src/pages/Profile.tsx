@@ -5,7 +5,7 @@ import { useState } from "react";
 const menuOptions = [
   {
     id: 1,
-    label: "Details",
+    label: "Profile",
     to: '/profile/'
   },
   {
@@ -36,13 +36,13 @@ export default function Profile() {
     setSelected(id);
   };
   return (<>
-    <div className="max-w-4xl mx-auto my-10 flex flex-col gap-4">
+    <div className="max-w-4xl mx-auto my-5 px-4">
       <div className="greetings text-center flex flex-col gap-4">
         <h1 className="text-4xl">Welcome, User</h1>
         <h1 className="text-xl">Check your account status here</h1>
       </div>
 
-      <div className="buttonArray my-3 overflow-x-auto">
+      <div className="buttonArray overflow-x-auto my-10">
         <div className="flex gap-4 min-w-max px-4 justify-center">
           {menuOptions.map((elem) => (
             <Button

@@ -11,7 +11,7 @@ import {
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import axios from "axios";
-import { ChevronDown } from "lucide-react";
+import {ChevronDown} from "lucide-react";
 
 type issueType = {
   issue: string,
@@ -70,7 +70,7 @@ function IssueDropdown({ issue, setIssue }: issueType) {
   return <>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="lg">{issue} <ChevronDown /></Button>
+        <Button variant="outline" size="lg">{issue}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
