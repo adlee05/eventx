@@ -3,14 +3,20 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import { NotifyContext } from "@/context/notifyContext";
 
-import type { notifyProp } from "@/types/notification";
 import { Link } from "react-router-dom";
 
 export default function Details() {
   const { setAuthStatus } = useContext(AuthContext);
+
+  const notifyContext = useContext(NotifyContext);
+  if (!notifyContext) {
+    throw new Error("Cannot use context outside its scope.");
+  }
+  const [, showNotification] = notifyContext;
 
   async function handleLogout() {
     try {
@@ -22,37 +28,13 @@ export default function Details() {
         setAuthStatus(false);
       }
     } catch {
-      setNpProps({
-        title: "Error",
-        description: "Error logging out",
-        type: "failure",
-        isActive: true,
+      showNotification({ 
+        title: "Unable to Logout",
+        desc: "Please try again later",
+        type: "failure"
       })
     }
-    console.log('action performed');
-
   }
-
-  const [npProps, setNpProps] = useState<notifyProp>({
-    title: "",
-    description: "",
-    type: "failure",
-    isActive: false,
-  });
-
-  useEffect(() => {
-    if (!npProps.isActive) return;
-
-    const timer = setTimeout(() => {
-      setNpProps((prev: notifyProp) => ({
-        ...prev,
-        isActive: false,
-      }))
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [npProps.isActive]);
-
 
   return <>
     <div className="prompt my-8">
