@@ -1,8 +1,14 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
-const UserSchema = new Schema(
+if (mongoose.models.User) {
+  delete mongoose.models.User;
+}
+
+ const UserSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
+    firstname: {type: String},
+    lastname: {type: String},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
 

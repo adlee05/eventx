@@ -12,11 +12,13 @@ import SavedEvents from './pages/savedEvents.js';
 import UpcomingEvents from './pages/upcomingEvents.js';
 import PastEvents from './pages/pastEvents.js';
 import Contact from "@/pages/contact.js";
+import Notify from "@/components/notification.jsx";
 
 function App() {
 
   return (
     <>
+      <Notify />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

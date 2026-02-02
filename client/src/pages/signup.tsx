@@ -1,46 +1,35 @@
 import AuthCard from "@/components/auth-card.tsx";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import Notify from "@/components/notification";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
+import { NotifyContext } from "@/context/notifyContext";
 
 // types
 import type { CredType } from "@/types/auth-card";
-import type { notifyProp } from "@/types/notification";
 
 function SignUp() {
-  const { AuthStatus } = useContext(AuthContext);
+  const { AuthStatus, loading } = useContext(AuthContext);
   const navigate = useNavigate();
-  if (AuthStatus) {
-    navigate('/');
+
+  useEffect(() => {
+    if (AuthStatus && !loading) {
+      navigate('/', { replace: true });
+    }
+  }, [AuthStatus, loading, navigate]);
+
+  const notifyContext = useContext(NotifyContext);
+  if (!notifyContext) {
+    throw new Error("Context cannot be used outside its scope.");
   }
+
+  const [, showNotification] = notifyContext;
+
   const [credentials, setCredentials] = useState<CredType>({
     email: "",
     password: "",
     username: ""
   });
-
-  const [npProps, setNpProps] = useState<notifyProp>({
-    title: "",
-    description: "",
-    type: "failure",
-    isActive: false,
-  });
-
-  useEffect(() => {
-    if (!npProps.isActive) return;
-
-    const timer = setTimeout(() => {
-      setNpProps((prev: notifyProp) => ({
-        ...prev,
-        isActive: false,
-      }))
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [npProps.isActive]);
-
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials((prev) => ({
@@ -56,49 +45,34 @@ function SignUp() {
       const res = await axios.post('http://localhost:5000/auth/signup', credentials, {
         withCredentials: true,
       }); if (res.data.success) {
-        console.log("signup successful!");
-        setNpProps({
-          title: "SignUp Successful",
-          description: "You will be redirected shortly.",
-          type: "success",
-          isActive: true,
-        })
-
+        navigate('/');
       } else {
-        console.log("signup failed!");
-        setNpProps({
-          title: "SignUp failed",
-          description: res.data.message,
-          type: "failure",
-          isActive: true,
+        showNotification({
+          title: "Signup falied",
+          desc: res.data.message,
+          type: "failure"
         })
-
       }
-      console.log(res.data.message);
     } catch (e) {
       if (axios.isAxiosError(e)) {
-        console.log(e.response?.status);
-        console.log(e.response?.data?.message);
-        setNpProps({
-          title: "SignUp failed",
-          description: e.response?.data?.message,
-          type: "failure",
-          isActive: true,
+        showNotification({
+          title: "Signup falied",
+          desc: e.response?.data?.message,
+          type: "failure"
         })
 
       }
     }
-    console.log("signup handled");
   };
+
+  if (loading) {
+    return <div className="flex justify-center items-center min-h-screen">
+      <p>Loading...</p>
+    </div>;
+  }
 
   return (
     <>
-      <Notify
-        title={npProps.title}
-        type={npProps.type}
-        description={npProps.description}
-        isActive={npProps.isActive}
-      />
       <div className="flex justify-center">
         <AuthCard
           title="Sign Up to EventX"

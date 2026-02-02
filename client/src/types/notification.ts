@@ -1,13 +1,13 @@
 type notifyType = {
   title: string,
-  description: string,
+  desc: string,
   type: "success" | "failure",
   isActive: boolean
 }
 
 interface notifyProp {
   title: string;
-  description: string;
+  desc: string;
   type: "success" | "failure";
   isActive: boolean
 };
