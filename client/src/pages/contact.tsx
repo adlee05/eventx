@@ -8,10 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction, useContext } from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import axios from "axios";
 import { ChevronDown } from "lucide-react";
+import { NotifyContext } from "@/context/notifyContext";
 
 type issueType = {
   issue: string,
@@ -19,20 +20,51 @@ type issueType = {
 }
 
 export default function Contact() {
-  const [issue, setIssue] = useState("Issue Type");
+  const [issue, setIssue] = useState("");
   const [message, setMessage] = useState("");
 
+  const notifyContext = useContext(NotifyContext);
+  if (!notifyContext) {
+    throw new Error("Cannot use context outside its scope.");
+  }
+  const [, showNotification] = notifyContext;
+
+  const options: Array<string> = ["Bug", "Others", "New Feature Suggestion", "UI Suggestion"];
+
   const handleSubmit = async () => {
+    if (!options.includes(issue)) {
+      showNotification({
+        type: "failure",
+        title: "Failed to record feedback",
+        desc: "Select an Issue type to post feedback."
+      })
+      return;
+    }
     try {
       const res = await axios.post('http://localhost:5000/contact',
         { issue: issue, message: message },
         { withCredentials: true }
       );
 
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-      console.log("error");
+      if (res.data.success) {
+        showNotification({
+          type: "success",
+          title: "Feedback sent successfully.",
+          desc: "You may be contacted later regarding this issue"
+        })
+      } else {
+        showNotification({
+          type: "failure",
+          title: "Failed to record feedback",
+          desc: res.data.message
+        })
+      }
+    } catch (e: unknown) {
+      showNotification({
+        type: "failure",
+        title: "Failed to record feedback",
+        desc: e.response.data.message
+      })
     }
   };
 

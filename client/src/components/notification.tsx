@@ -25,7 +25,7 @@ function NotifyComp(props: notifyType) {
 
   return (<>
     <Alert variant={type} className={cn(
-      "max-w-sm absolute z-10 top-0 right-0 m-4",
+      "max-w-sm absolute z-100 top-0 right-0 m-4",
       props.isActive
         ? "animate-in fade-in slide-in-from-top-2 duration-300 opacity-100"
         : "animate-out fade-out slide-out-to-top-2 duration-300 opacity-0 pointer-events-none"
