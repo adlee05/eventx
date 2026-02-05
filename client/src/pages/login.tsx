@@ -40,7 +40,7 @@ function Login() {
     event.preventDefault();
     // post user credentials
     try {
-      const res = await axios.post('http://localhost:5000/auth/login', credentials, {
+      const res = await axios.post(import.meta.env.VITE_SERVER_URI + 'auth/login', credentials, {
         withCredentials: true,
       });
       if (res.data.success) {

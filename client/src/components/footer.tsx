@@ -22,13 +22,6 @@ const footerLinks = [
   }
 ];
 
-// <Button variant="link" asChild>
-//           <Link to='/'>Home</Link>
-//         </Button>
-//         <Link to='/about'>About</Link>
-//         <Link to='/contact'>Contact</Link>
-//         <Link to='/signup'>Get Started</Link>
-
 export default function Footer() {
   return (<>
     <div className="flex flex-col p-10 md:flex-row justify-around items-center gap-4"> <div> <Logo /> </div>

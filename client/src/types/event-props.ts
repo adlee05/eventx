@@ -1,6 +1,6 @@
 type EventProps = {
   id: string,
-  date: string,
+  date: Date,
   duration: string,
   title: string,
   desc: string,

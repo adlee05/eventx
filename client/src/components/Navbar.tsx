@@ -14,6 +14,8 @@ import { useState, useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { ModeToggle } from "@/components/modeToggle";
 import AvatarComp from "@/components/AvatarComp";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 export default function NavbarComp() {
   const { AuthStatus } = useContext(AuthContext);
@@ -43,7 +45,14 @@ export default function NavbarComp() {
           <NavItems items={navItems} />
           <div className="flex items-center">
             {AuthStatus ?
-              <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
+              <div className="flex items-center">
+                <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
+                <NavbarButton variant="secondary">
+                  <Link to='/event/create'>
+                    <Button variant="outline" className="cursor-pointer"><Plus /> Create Event</Button>
+                  </Link>
+                </NavbarButton>
+              </div>
               : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
             <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
           </div>
@@ -75,8 +84,10 @@ export default function NavbarComp() {
             ))}
             <div className="flex w-full flex-col gap-4">
               {AuthStatus ?
-                <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
-                : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
+                <div className="flex flex-col gap-5">
+                  <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
+                  <Button variant="outline"><Plus /> Create Event</Button>
+                </div> : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
               <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
             </div>
           </MobileNavMenu>

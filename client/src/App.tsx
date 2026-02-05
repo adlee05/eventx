@@ -6,11 +6,11 @@ import Home from "@/pages/home.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Layout from "@/components/Layout.jsx"
 import Events from "@/pages/events.js";
-import Profile from "@/pages/Profile.js";
-import Details from './pages/Details.js';
-import SavedEvents from './pages/savedEvents.js';
-import UpcomingEvents from './pages/upcomingEvents.js';
-import PastEvents from './pages/pastEvents.js';
+import Profile from "@/pages/profile/Profile.js";
+import Details from './pages/profile/Details.js';
+import SavedEvents from './pages/profile/savedEvents.js';
+import UpcomingEvents from './pages/profile/upcomingEvents.js';
+import PastEvents from './pages/profile/pastEvents.js';
 import Contact from "@/pages/contact.js";
 import Notify from "@/components/notification.jsx";
 
@@ -36,7 +36,6 @@ function App() {
               <Route path="upcomingEvents" element={<UpcomingEvents />} />
               <Route path="pastEvents" element={<PastEvents />} />
             </Route>
-
           </Route>
         </Route>
       </Routes>

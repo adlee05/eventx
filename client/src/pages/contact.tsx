@@ -20,7 +20,7 @@ type issueType = {
 }
 
 export default function Contact() {
-  const [issue, setIssue] = useState("");
+  const [issue, setIssue] = useState("Select Issue");
   const [message, setMessage] = useState("");
 
   const notifyContext = useContext(NotifyContext);
@@ -80,7 +80,6 @@ export default function Contact() {
           </p>
         </div>
         <div className="issue flex items-center gap-10 p-10 mx-auto">
-          <p className="font-bold">Select Issue Type</p>
           <IssueDropdown issue={issue} setIssue={setIssue} />
         </div>
         <Field>

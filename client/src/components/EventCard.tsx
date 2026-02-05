@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { IconClockHour3 } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
+import { formatDate } from "@/utils/formatDate";
 import type { EventProps } from "@/types/event-props";
 
 export function EventCard(props: EventProps) {
@@ -19,7 +20,7 @@ export function EventCard(props: EventProps) {
             <IconClockHour3 stroke={2} color={"white"} />
             <div className="flex flex-col">
               <p className="font-normal text-base text-gray-50 relative z-10">
-                {props.date}
+                {formatDate(props.date)}
               </p>
               <p className="text-sm text-gray-400">{props.duration}</p>
             </div>

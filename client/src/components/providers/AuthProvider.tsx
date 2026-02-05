@@ -16,7 +16,7 @@ export function AuthProvider({ children }: Props) {
     const checkAuth = async (): Promise<void> => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/auth/me",
+          import.meta.env.VITE_SERVER_URI + "/auth/me",
           { withCredentials: true }
         );
 
