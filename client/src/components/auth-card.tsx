@@ -47,7 +47,7 @@ function AuthCard(props: AuthCardProps) {
               />
             </div>
           ))}
-          <Button className="w-full" type="submit">{props.type}</Button>
+          <Button className="w-full cursor-pointer" type="submit">{props.type}</Button>
         </form>
       </CardContent>
       <CardFooter>

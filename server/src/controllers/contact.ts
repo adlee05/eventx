@@ -50,7 +50,6 @@ async function createUserContact(req: Request, res: Response) {
 }
 
 async function getAllQueries(req: Request, res: Response) {
-
 }
 
 export { createUserContact, getAllQueries };

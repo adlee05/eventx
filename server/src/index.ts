@@ -10,6 +10,7 @@ import cors from "cors";
 import auth from "./routes/auth.js";
 import eventRoutes from "./routes/events.js"
 import contact from "./routes/contact.js";
+import profile from "./routes/profile.js";
 
 const app = express();
 const PORT = Number(envs.port);
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use('/event', eventRoutes);
 app.use('/auth', auth);
 app.use('/contact', contact);
+app.use('/profile', profile);
 
 async function startServer() {
   // connect to the db via mongoose

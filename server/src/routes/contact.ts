@@ -1,6 +1,6 @@
 import express from "express";
-import authenticate from "../middlewares/authenticate.js";
-import authorize from "../middlewares/authorize.js";
+import authenticate from "../middleware/authenticate.js";
+import authorize from "../middleware/authorize.js";
 import { createUserContact, getAllQueries } from "../controllers/contact.js";
 
 const router = express.Router();

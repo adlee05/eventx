@@ -1,5 +1,5 @@
 import express from "express";
-import authenticate from "../middlewares/authenticate.js";
+import authenticate from "../middleware/authenticate.js";
 import { EventModel } from "../models/event.js";
 import { addEvent, 
   getAllEvents, 

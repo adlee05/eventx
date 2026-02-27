@@ -2,7 +2,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { NotifyContext } from "@/context/notifyContext";
@@ -18,24 +18,6 @@ export default function Details() {
   }
   const [, showNotification] = notifyContext;
 
-  async function handleLogout() {
-    try {
-      const res = await axios.get(import.meta.env.VITE_SERVER_URI + '/auth/logout', {
-        withCredentials: true,
-      });
-
-      if (res.data.success) {
-        setAuthStatus(false);
-      }
-    } catch {
-      showNotification({
-        title: "Unable to Logout",
-        desc: "Please try again later",
-        type: "failure"
-      })
-    }
-  }
-
   // stateful inputs
   const [inputs, setInputs] = useState({
     fName: "",
@@ -44,6 +26,26 @@ export default function Details() {
     location: "",
     bio: ""
   })
+
+  async function handleLogout() {
+    if (inputs.fName == "")
+
+      try {
+        const res = await axios.get(import.meta.env.VITE_SERVER_URI + '/auth/logout', {
+          withCredentials: true,
+        });
+
+        if (res.data.success) {
+          setAuthStatus(false);
+        }
+      } catch {
+        showNotification({
+          title: "Unable to Logout",
+          desc: "Please try again later",
+          type: "failure"
+        })
+      }
+  }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({
@@ -54,6 +56,28 @@ export default function Details() {
 
   const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_SERVER_URI}/profile/update`,
+        inputs, {
+        withCredentials: true
+      });
+
+      if (res.data.success) {
+        showNotification({
+          title: "Profile Successfully Updated",
+          desc: "Changes will be reflected shortly",
+          type: "success"
+        })
+      }
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        showNotification({
+          title: "Update Unsuccessful",
+          desc: e.response?.data?.message,
+          type: "failure"
+        })
+      }
+    }
   };
 
   return <>

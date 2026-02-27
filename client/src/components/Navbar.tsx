@@ -37,7 +37,7 @@ export default function NavbarComp() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full z-100">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
@@ -84,7 +84,7 @@ export default function NavbarComp() {
             ))}
             <div className="flex w-full flex-col gap-4">
               {AuthStatus ?
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
                   <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
                   <Button variant="outline"><Plus /> Create Event</Button>
                 </div> : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}

@@ -1,14 +1,13 @@
 import { cn } from "@/lib/utils";
 import { IconClockHour3 } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
-import { formatDate } from "@/utils/formatDate";
 import type { EventProps } from "@/types/event-props";
 
 export function EventCard(props: EventProps) {
   const linkTo = `/events/${props.id}`;
   return (
     <Link to={linkTo} className="block">
-      <div className="group/card w-70">
+      <div className="group/card w-full max-w-sm">
         <div
           className={cn(
             " cursor-pointer overflow-hidden relative card h-96 rounded-md shadow-xl w-full mx-auto backgroundImage flex flex-col justify-between p-4",
@@ -20,7 +19,7 @@ export function EventCard(props: EventProps) {
             <IconClockHour3 stroke={2} color={"white"} />
             <div className="flex flex-col">
               <p className="font-normal text-base text-gray-50 relative z-10">
-                {formatDate(props.date)}
+                {props.date}
               </p>
               <p className="text-sm text-gray-400">{props.duration}</p>
             </div>

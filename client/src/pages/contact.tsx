@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useState, type Dispatch, type SetStateAction, useContext } from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ChevronDown } from "lucide-react";
 import { NotifyContext } from "@/context/notifyContext";
 
@@ -60,11 +60,13 @@ export default function Contact() {
         })
       }
     } catch (e: unknown) {
-      showNotification({
-        type: "failure",
-        title: "Failed to record feedback",
-        desc: e.response.data.message
-      })
+      if (e instanceof AxiosError) {
+        showNotification({
+          type: "failure",
+          title: "Failed to record feedback",
+          desc: e.response?.data?.message
+        })
+      }
     }
   };
 
