@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Navbar,
   NavBody,
@@ -35,6 +35,7 @@ export default function NavbarComp() {
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <div className="relative w-full z-100">
@@ -54,7 +55,7 @@ export default function NavbarComp() {
                 </NavbarButton>
               </div>
               : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
-            <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
+            {location.pathname != '/' && <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>}
           </div>
         </NavBody>
 
@@ -88,7 +89,7 @@ export default function NavbarComp() {
                   <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
                   <Button variant="outline"><Plus /> Create Event</Button>
                 </div> : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
-              <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>
+              {location.pathname != '/' && <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>}
             </div>
           </MobileNavMenu>
         </MobileNav>
