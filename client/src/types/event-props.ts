@@ -1,10 +1,11 @@
 type EventProps = {
-  id: string,
+  _id: number,
   date: string,
   duration: string,
   title: string,
-  desc: string,
-  place: string,
+  description: string,
+  location: string,
+  imageUrl: string
 };
 
 export type { EventProps };

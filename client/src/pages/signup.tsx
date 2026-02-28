@@ -42,7 +42,7 @@ function SignUp() {
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const res = await axios.post(`import.meta.env.VITE_SERVER_URI}/auth/login`, credentials, {
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/auth/signup`, credentials, {
         withCredentials: true,
       }); if (res.data.success) {
         navigate('/');

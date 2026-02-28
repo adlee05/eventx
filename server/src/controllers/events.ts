@@ -14,7 +14,7 @@ async function addEvent(req: Request, res: Response) {
     }
 
     //@ts-ignore
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const event = await EventModel.create({
       title,
@@ -46,7 +46,7 @@ async function addEvent(req: Request, res: Response) {
 // Get events created by a user
 async function userEvents(req: Request, res: Response) {
   try {
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const events = await EventModel.find({ userId }).sort({ date: -1 });
 
@@ -90,7 +90,7 @@ async function eventById(req: Request, res: Response) {
     const { id } = req.params;
 
     //@ts-ignore
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const event = await EventModel.findOne({ _id: id, userId });
 
@@ -120,7 +120,7 @@ async function deleteEventById(req: Request, res: Response) {
 
     const { id } = req.params;
 
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const event = await EventModel.findOneAndDelete({ _id: id, userId })
 
@@ -146,7 +146,7 @@ async function changeEventDetails(req: Request, res: Response) {
       certificateText, certificateTemplateUrl, status } = req.body;
 
     //@ts-ignore
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const event = await EventModel.findOne({ _id: id, userId });
 

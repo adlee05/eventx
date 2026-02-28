@@ -35,5 +35,4 @@ function HomeHero() {
   );
 }
 
-
 export default HomeHero;
