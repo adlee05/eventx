@@ -19,7 +19,7 @@ type issueType = {
   setIssue: Dispatch<SetStateAction<string>>
 }
 
-export default function Contact() {
+function Contact() {
   const [issue, setIssue] = useState("Select Issue");
   const [message, setMessage] = useState("");
 
@@ -92,7 +92,7 @@ export default function Contact() {
             value={message}
             onChange={(event) => setMessage(event.target.value)} />
         </Field>
-        <Button className="w-fit mt-[1em]" onClick={handleSubmit}>Submit</Button>
+        <Button disabled={message.length == 0} className="w-fit mt-[1em]" onClick={handleSubmit}>Submit</Button>
       </div>
       <BackgroundBeams className="-z-10" />
     </>
@@ -116,3 +116,5 @@ function IssueDropdown({ issue, setIssue }: issueType) {
     </DropdownMenu>
   </>;
 }
+
+export default Contact;

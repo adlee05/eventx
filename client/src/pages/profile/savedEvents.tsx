@@ -1,3 +1,5 @@
-export default function SavedEvents() {
+function SavedEvents() {
   return <>SavedEvents</>;
 }
+
+export default SavedEvents;

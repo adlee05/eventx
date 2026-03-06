@@ -6,7 +6,7 @@ import { Bookmark, ChevronRight } from "lucide-react";
 import { Button } from '@/components/ui/button';
 
 export function EventCard(props: EventProps) {
-  const linkTo = `/events/${props._id}`;
+  const linkTo = `/event/${props._id}`;
   return (
     <div className="group/card w-full max-w-sm">
       <div
@@ -38,11 +38,11 @@ export function EventCard(props: EventProps) {
             {props.title}
           </h1>
 
-          <p className="text-sm text-gray-200 mt-2 line-clamp-3">
+          <p className="text-sm text-gray-200 mt-2 line-clamp-2">
             {props.description}
           </p>
           <div className='userActions mt-3 flex items-center justify-between'>
-            <div className='bookmark text-white'><Bookmark /></div>
+            <div className='bookmark text-white cursor-pointer'><Bookmark /></div>
             <div className="more">
               <Button asChild className="bg-white text-black">
                 <Link to={linkTo}>

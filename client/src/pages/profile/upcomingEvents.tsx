@@ -1,3 +1,5 @@
-export default function UpcomingEvents() {
+function UpcomingEvents() {
   return <>UpcomingEvents</>;
 }
+
+export default UpcomingEvents;

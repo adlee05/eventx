@@ -25,12 +25,16 @@ const menuOptions = [
   }
 ]
 
-export default function Profile() {
+// <Button variant="ghost" className="cursor-pointer">Details</Button>
+//         <Button variant="ghost">Saved Events</Button>
+//         <Button variant="ghost">Upcoming Events</Button>
+//         <Button>Attended Events</Button>
+
+function Profile() {
   const [selected, setSelected] = useState(1);
   const handleClick = (id: number) => {
     setSelected(id);
   };
-
   return (<>
     <div className="max-w-4xl mx-auto my-5 px-4">
       <div className="greetings text-center flex flex-col gap-4">
@@ -57,3 +61,5 @@ export default function Profile() {
     </div>
   </>);
 }
+
+export default Profile;

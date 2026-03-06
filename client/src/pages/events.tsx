@@ -6,7 +6,7 @@ import { NotifyContext } from "@/context/notifyContext";
 // types
 import type { EventProps } from "@/types/event-props";
 
-export default function Events() {
+function Events() {
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
     throw new Error("Cannot use context outside its scope.");
@@ -69,3 +69,5 @@ export default function Events() {
     </>
   );
 }
+
+export default Events; 

@@ -1,5 +1,5 @@
 type EventProps = {
-  _id: number,
+  _id: string,
   date: string,
   duration: string,
   title: string,

@@ -6,12 +6,13 @@ import Home from "@/pages/home.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Layout from "@/components/Layout.jsx"
 import Events from "@/pages/events.js";
-import Profile from "@/pages/profile/Profile.js";
-import Details from './pages/profile/Details.js';
+import Profile from "@/pages/profile/profile.js";
+import Details from './pages/profile/details.js';
 import SavedEvents from './pages/profile/savedEvents.js';
 import UpcomingEvents from './pages/profile/upcomingEvents.js';
 import PastEvents from './pages/profile/pastEvents.js';
 import Contact from "@/pages/contact.js";
+import EventPage from "@/pages/eventPage.js"
 import Notify from "@/components/notification.jsx";
 
 function App() {
@@ -24,12 +25,12 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
 
         <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
           <Route path="/events" element={<Events />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Home />} />
+            <Route path="/event/:id" element={<EventPage />} />
             <Route path="/contact" element={<Contact />} />
-
             <Route path="/profile" element={<Profile />}>
               <Route index element={<Details />} />
               <Route path="savedEvents" element={<SavedEvents />} />

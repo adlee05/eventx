@@ -8,8 +8,9 @@ import { AuthContext } from "@/context/AuthContext";
 import { NotifyContext } from "@/context/notifyContext";
 
 import { Link } from "react-router-dom";
+import { ArrowDown01 } from "lucide-react";
 
-export default function Details() {
+function Details() {
   const { setAuthStatus } = useContext(AuthContext);
 
   const notifyContext = useContext(NotifyContext);
@@ -112,7 +113,13 @@ export default function Details() {
             <Input id="bio" placeholder="I organize wonderful events!" value={inputs.bio} onChange={handleInputChange} />
           </Field>
         </FieldGroup>
-        <Button className="w-min" type="submit">Update</Button>
+        <Button disabled={
+          inputs.fName.length == 0
+          && inputs.lName.length == 0
+          && inputs.location.length == 0
+          && inputs.bio.length == 0
+          && inputs.username.length == 0
+        } className="w-min" type="submit">Update</Button>
       </form>
     </div>
 
@@ -130,3 +137,5 @@ export default function Details() {
 
   </>;
 }
+
+export default Details;

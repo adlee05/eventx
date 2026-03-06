@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { EventModel } from "../models/event.js";
+import { success } from "zod";
 
 // add a new event
 async function addEvent(req: Request, res: Response) {
@@ -88,27 +89,28 @@ async function eventById(req: Request, res: Response) {
   try {
 
     const { id } = req.params;
+    console.log(id)
 
-    //@ts-ignore
-    const userId = req.user.userId;
-
-    const event = await EventModel.findOne({ _id: id, userId });
+    const event = await EventModel.findById(id);
 
     if (!event) {
-      res.status(404).json({
-        message: " Event Not Found!"
+      return res.status(404).json({
+        message: " Event Not Found!",
+        success: false
       })
     }
 
     res.json({
       message: " Event Fetched Sucessfully!",
-      data: event
+      data: event,
+      success: true
     });
 
   } catch (error) {
     console.error("Error fetching Event", error);
     res.status(500).json({
       message: "Failed to fetch Event!",
+      success: false
     });
 
   }
