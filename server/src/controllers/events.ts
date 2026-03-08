@@ -89,7 +89,6 @@ async function eventById(req: Request, res: Response) {
   try {
 
     const { id } = req.params;
-    console.log(id)
 
     const event = await EventModel.findById(id);
 

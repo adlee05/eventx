@@ -5,7 +5,8 @@ export interface EventType {
 
   title: string;
   description?: string;
-  date: Date | string;
+  startTime: Date;
+  endTime: Date;
   location: string;
 
   imageUrl?: string;

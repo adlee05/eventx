@@ -38,7 +38,7 @@ function Events() {
     };
 
     fetchEvents();
-  }, [showNotification]);
+  }, []);
 
   if (loading) {
     return <h1>Loading.....</h1>;
@@ -51,12 +51,12 @@ function Events() {
           <h1 className="text-lg font-bold">Events</h1>
           <p className="text-base">View all available events</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-14 gap-x-12 justify-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
           {events.map((event, i) => (
             <EventCard
               key={i}
               _id={event._id}
-              date={event.date}
+              startTime={event.startTime}
               duration="4hrs"
               location={event.location}
               title={event.title}
