@@ -183,14 +183,26 @@ async function logout(req: Request, res: Response) {
 
 async function me(req: Request, res: Response) {
   const uname = await UserModel
-    .findById(req.user.userId)
-    .select("username");
+    .findById(req.user.userId);
+
+  if (!uname) {
+    return res.status(400).json({
+      message: "Cannot find user",
+      success: false
+    });
+  }
 
   res.status(200).json({
     data: req.user,
     message: "user authenticated successfully.",
     success: true,
-    username: uname.username 
+    userDetails: {
+      username: uname.username,
+      firstname: uname.firstname,
+      lastname: uname.lastname,
+      bio: uname.bio,
+      location: uname.location
+    }
   })
 }
 

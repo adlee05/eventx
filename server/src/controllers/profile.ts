@@ -16,6 +16,8 @@ async function updateProfile(req: Request, res: Response) {
     if (lName) inputs.lastname = lName;
     if (bio) inputs.bio = bio;
     if (username) inputs.username = username;
+    if (location) inputs.location = location;
+
 
     if (Object.keys(inputs).length == 0) {
       return res.status(400).json({

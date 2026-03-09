@@ -5,7 +5,13 @@ export interface AuthContextType {
   loading: boolean;
   setAuthStatus: React.Dispatch<SetStateAction<boolean>>,
   setLoading: React.Dispatch<SetStateAction<boolean>>,
-  username: string;
+  userDetails: undefined | {
+    location: string, 
+    username: string,
+    firstname: string,
+    lastname: string,
+    bio: string
+  };
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -13,6 +19,6 @@ export const AuthContext = createContext<AuthContextType>({
   setAuthStatus() { },
   setLoading() { },
   loading: true,
-  username: ""
+  userDetails: undefined 
 });
 

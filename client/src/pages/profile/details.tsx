@@ -8,10 +8,12 @@ import { AuthContext } from "@/context/AuthContext";
 import { NotifyContext } from "@/context/notifyContext";
 
 import { Link } from "react-router-dom";
-import { ArrowDown01 } from "lucide-react";
 
 function Details() {
   const { setAuthStatus } = useContext(AuthContext);
+
+  // get userdetails
+  const { userDetails } = useContext(AuthContext);
 
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
@@ -21,31 +23,29 @@ function Details() {
 
   // stateful inputs
   const [inputs, setInputs] = useState({
-    fName: "",
-    lName: "",
-    username: "",
-    location: "",
-    bio: ""
+    fName: userDetails?.firstname ?? "",
+    lName: userDetails?.lastname ?? "",
+    username: userDetails?.username ?? "",
+    location: userDetails?.location ?? "",
+    bio: userDetails?.bio ?? ""
   })
 
   async function handleLogout() {
-    if (inputs.fName == "")
+    try {
+      const res = await axios.get(import.meta.env.VITE_SERVER_URI + '/auth/logout', {
+        withCredentials: true,
+      });
 
-      try {
-        const res = await axios.get(import.meta.env.VITE_SERVER_URI + '/auth/logout', {
-          withCredentials: true,
-        });
-
-        if (res.data.success) {
-          setAuthStatus(false);
-        }
-      } catch {
-        showNotification({
-          title: "Unable to Logout",
-          desc: "Please try again later",
-          type: "failure"
-        })
+      if (res.data.success) {
+        setAuthStatus(false);
       }
+    } catch {
+      showNotification({
+        title: "Unable to Logout",
+        desc: "Please try again later",
+        type: "failure"
+      })
+    }
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,13 +113,7 @@ function Details() {
             <Input id="bio" placeholder="I organize wonderful events!" value={inputs.bio} onChange={handleInputChange} />
           </Field>
         </FieldGroup>
-        <Button disabled={
-          inputs.fName.length == 0
-          && inputs.lName.length == 0
-          && inputs.location.length == 0
-          && inputs.bio.length == 0
-          && inputs.username.length == 0
-        } className="w-min" type="submit">Update</Button>
+        <Button className="w-min" type="submit">Update</Button>
       </form>
     </div>
 
@@ -130,8 +124,8 @@ function Details() {
         <h1 className="text-lg font-bold">Logout</h1>
         <p className="text-base">You can signout from your account here</p>
       </div>
-      <Button onClick={handleLogout} asChild>
-        <Link to=''>Logout</Link>
+      <Button onClick={handleLogout} className="cursor-pointer">
+        Logout
       </Button>
     </div>
 

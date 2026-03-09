@@ -36,11 +36,12 @@ function Profile() {
   const handleClick = (id: number) => {
     setSelected(id);
   };
-  const { username } = useContext(AuthContext);
+  const {userDetails} = useContext(AuthContext);
+
   return (<>
     <div className="max-w-4xl mx-auto my-5 px-4">
       <div className="greetings text-center flex flex-col gap-4">
-        <h1 className="text-4xl">Welcome, {username}</h1>
+        <h1 className="text-4xl">Welcome, {userDetails?.username}</h1>
         <h1 className="text-xl">Check your account status here</h1>
       </div>
 
