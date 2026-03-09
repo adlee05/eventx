@@ -9,8 +9,22 @@ import { IconClockHour3 } from '@tabler/icons-react';
 import { Button } from "@/components/ui/button";
 import getTime from "@/utils/getTime.js";
 import { Calendar, Clock, MapPin } from "lucide-react";
+import { Badge } from "@/components/ui/badge"
+import { AuthContext } from "@/context/AuthContext";
+import { Link } from "react-router-dom"
 
 function EventPage() {
+  // badges
+  const categoryColors: Record<string, string> = {
+    tech: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 mb-3",
+    recreational: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300 mb-3",
+    art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-3",
+  }
+
+  // get username
+  const { username } = useContext(AuthContext);
+  const userLink = `/users/${username}`;
+
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
     throw new Error("Cannot use context outside its scope.");
@@ -53,7 +67,9 @@ function EventPage() {
   }, [id]);
 
   if (loading) {
-    return <><Spinner /></>;
+    return <div className="mx-auto flex justify-center">
+      <Spinner />
+    </div>;
   }
 
   if (!details) {
@@ -71,6 +87,9 @@ function EventPage() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-6">
 
         <div>
+          <Badge className={categoryColors[details.category]}>
+            {details.category}
+          </Badge>
           <h1 className="text-3xl md:text-4xl font-semibold">
             {details.title}
           </h1>
@@ -80,6 +99,14 @@ function EventPage() {
             <span>{formatDate(details.startTime)}</span>
             <span>•</span>
             <span>{details.location}</span>
+          </div>
+          <div className="created-by flex items-center">
+            <p className="font-semibold">Event by</p>
+            <Link to={userLink}>
+              <Button variant="link" className="cursor-pointer">
+                {username}
+              </Button>
+            </Link>
           </div>
         </div>
 

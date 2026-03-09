@@ -5,12 +5,13 @@ import { success } from "zod";
 // add a new event
 async function addEvent(req: Request, res: Response) {
   try {
-    const { title, description, date, imageUrl, location,
-      certificateText, certificateTemplateUrl, status, } = req.body;
+    const { title, description, startTime, endTime, imageUrl, location,
+      status, category } = req.body;
 
-    if (!title || !description || !date || !location) {
+    if (!title || !description || !startTime || !endTime || !location) {
       return res.status(400).json({
         message: "Must fill all required fields!",
+        success: false
       });
     }
 
@@ -19,12 +20,12 @@ async function addEvent(req: Request, res: Response) {
 
     const event = await EventModel.create({
       title,
+      category,
+      startTime,
+      endTime,
       description,
-      date,
       location,
       imageUrl,
-      certificateText,
-      certificateTemplateUrl,
       status,
       createdBy: userId,
       registeredUsers: [],
@@ -33,12 +34,14 @@ async function addEvent(req: Request, res: Response) {
     return res.status(201).json({
       message: "Event added successfully!",
       event,
+      success: false
     });
 
   } catch (error) {
     console.error("Error adding Event!", error);
     return res.status(500).json({
       message: "Failed to add Event!",
+      success: false
     });
   }
 

@@ -182,10 +182,15 @@ async function logout(req: Request, res: Response) {
 }
 
 async function me(req: Request, res: Response) {
+  const uname = await UserModel
+    .findById(req.user.userId)
+    .select("username");
+
   res.status(200).json({
     data: req.user,
     message: "user authenticated successfully.",
     success: true,
+    username: uname.username 
   })
 }
 

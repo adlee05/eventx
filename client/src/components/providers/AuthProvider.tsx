@@ -11,6 +11,7 @@ interface Props {
 export function AuthProvider({ children }: Props) {
   const [AuthStatus, setAuthStatus] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     const checkAuth = async (): Promise<void> => {
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: Props) {
 
         if (res.data.success) {
           setAuthStatus(true);
+          setUsername(res.data.username);
         }
       } finally {
         setLoading(false);
@@ -32,7 +34,7 @@ export function AuthProvider({ children }: Props) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ AuthStatus, setAuthStatus, loading, setLoading }}>
+    <AuthContext.Provider value={{ AuthStatus, setAuthStatus, loading, setLoading, username }}>
       {children}
     </AuthContext.Provider>
   );

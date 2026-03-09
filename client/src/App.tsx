@@ -14,6 +14,7 @@ import PastEvents from './pages/profile/pastEvents.js';
 import Contact from "@/pages/contact.js";
 import EventPage from "@/pages/eventPage.js"
 import Notify from "@/components/notification.jsx";
+import CreatePage from "@/pages/createPage.jsx"
 
 function App() {
 
@@ -29,7 +30,10 @@ function App() {
           <Route path="/events" element={<Events />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/event/:id" element={<EventPage />} />
+            <Route path="/event">
+              <Route path=":id" element={<EventPage />} />
+              <Route path="create" element={<CreatePage />} />
+            </Route>
             <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />}>
               <Route index element={<Details />} />

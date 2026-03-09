@@ -62,6 +62,7 @@ function Events() {
               title={event.title}
               description={event.description}
               imageUrl={event.imageUrl}
+              category={event.category}
             />
           ))}
         </div>

@@ -1,4 +1,5 @@
 type EventProps = {
+  category: string,
   _id: string,
   startTime: Date,
   duration: string,

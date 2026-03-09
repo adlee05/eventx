@@ -21,6 +21,7 @@ export interface EventType {
   status?: EventStatus;
 
   certificateText?: string;
+  category: string;
 
   createdAt?: Date | string;
   updatedAt?: Date | string;
