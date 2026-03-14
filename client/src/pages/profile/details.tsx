@@ -7,8 +7,6 @@ import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { NotifyContext } from "@/context/notifyContext";
 
-import { Link } from "react-router-dom";
-
 function Details() {
   const { setAuthStatus } = useContext(AuthContext);
 

@@ -9,7 +9,7 @@ import { NotifyContext } from "@/context/notifyContext";
 import type { CredType } from "@/types/auth-card";
 
 function SignUp() {
-  const { AuthStatus, loading } = useContext(AuthContext);
+  const { AuthStatus, loading, setAuthStatus } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +45,7 @@ function SignUp() {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/auth/signup`, credentials, {
         withCredentials: true,
       }); if (res.data.success) {
+        setAuthStatus(true);
         navigate('/');
       } else {
         showNotification({
