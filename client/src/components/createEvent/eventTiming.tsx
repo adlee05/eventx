@@ -20,22 +20,47 @@ import {
 import { Input } from "@/components/ui/input";
 import { format, addDays } from "date-fns";
 import { type DateRange } from "react-day-picker"
+import { type UseFormRegister, type UseFormSetValue } from "react-hook-form";
+import { type formData } from "@/types/formData";
+import { useEffect } from "react";
 
-function EventTiming() {
+type Props = {
+  register: UseFormRegister<formData>,
+  setValue: UseFormSetValue<formData>
+};
+
+function EventTiming({ register, setValue }: Props) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(new Date().getFullYear(), 0, 20),
     to: addDays(new Date(new Date().getFullYear(), 0, 20), 20),
   });
   const [open, setOpen] = useState(false)
-  console.log(date);
   const [deadline, setDeadline] = useState<Date | undefined>(undefined)
 
+  // sync the state values of event dates and deadlines
+  useEffect(() => {
+    register("deadDate")
+    register("eventDate")
+  }, [register])
+
+  useEffect(() => {
+    if (deadline) {
+      setValue("deadDate", deadline);
+    }
+  }, [deadline])
+
+  useEffect(() => {
+    if (date) {
+      setValue("eventDate", date)
+    }
+  }, [date])
+
   return (<>
-    <h1 className="text-2xl font-semibold text-amber-500 heading">Event Timing</h1>
+    <h1 className="text-2xl font-semibold text-amber-500 heading mb-6">Event Timing</h1>
     <FieldGroup>
       <FieldLabel htmlFor="event-timing" className="text-lg"><Clock8 /> Select Event Timing</FieldLabel>
-      <div className="grid md:grid-cols-3 gap-10 items-end">
-        <Field className="w-60">
+      <div className="md:flex gap-20">
+        <Field className="w-60 my-3">
           <FieldLabel htmlFor="date-picker-range">Event Timeline Date</FieldLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -70,31 +95,33 @@ function EventTiming() {
             </PopoverContent>
           </Popover>
         </Field>
-        <Field className="w-35">
+        <Field className="w-35 my-3">
           <FieldLabel htmlFor="time-picker-optional">Start Time</FieldLabel>
           <Input
             type="time"
             id="time-picker-optional"
             step="1"
             defaultValue="10:30:00"
+            {...register("startTime")}
             className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
           />
         </Field>
-        <Field className="w-35">
+        <Field className="w-35 my-3">
           <FieldLabel htmlFor="time-picker-optional">End Time</FieldLabel>
           <Input
             type="time"
             id="time-picker-optional"
             step="1"
             defaultValue="10:30:00"
+            {...register("endTime")}
             className="appearance-none bg-background [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
           />
         </Field>
       </div>
 
-      <FieldLabel htmlFor="deadline" className="text-lg my-3"><ClipboardClock /> Registration Deadline</FieldLabel>
-      <div className="flex  gap-10">
-        <Field className="w-32">
+      <FieldLabel htmlFor="deadline" className="text-lg"><ClipboardClock /> Registration Deadline</FieldLabel>
+      <div className="flex  gap-20">
+        <Field className="w-32 my-3">
           <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
@@ -121,9 +148,10 @@ function EventTiming() {
             </PopoverContent>
           </Popover>
         </Field>
-        <Field className="w-35">
+        <Field className="w-35 my-3">
           <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
           <Input
+            {...register("deadTime")}
             type="time"
             id="time-picker-optional"
             step="1"

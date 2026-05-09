@@ -192,6 +192,8 @@ async function me(req: Request, res: Response) {
     });
   }
 
+  console.log(uname)
+
   res.status(200).json({
     data: req.user,
     message: "user authenticated successfully.",

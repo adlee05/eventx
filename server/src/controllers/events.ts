@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { EventModel } from "../models/event.js";
-import { success } from "zod";
+import axios from "axios";
 
 // add a new event
 async function addEvent(req: Request, res: Response) {

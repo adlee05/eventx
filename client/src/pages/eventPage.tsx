@@ -22,8 +22,8 @@ function EventPage() {
   }
 
   // get username
-  const { username } = useContext(AuthContext);
-  const userLink = `/users/${username}`;
+  const { userDetails } = useContext(AuthContext);
+  const userLink = `/users/${userDetails?.username}`;
 
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
@@ -104,7 +104,7 @@ function EventPage() {
             <p className="font-semibold">Event by</p>
             <Link to={userLink}>
               <Button variant="link" className="cursor-pointer">
-                {username}
+                {userDetails?.username}
               </Button>
             </Link>
           </div>

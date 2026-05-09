@@ -8,7 +8,7 @@ const EventSchema = new Schema(
     endTime: { type: Date, required: true },
     location: { type: String, required: true },
     imageUrl: { type: String },
-    createdBy: { type: Schema.Types.ObjectId, ref: "User", },
+    createdBy: { type: String },
     registeredUsers: [{ type: Schema.Types.ObjectId, ref: "User", },],
     attendees: [{ type: Schema.Types.ObjectId, ref: "User", },],
     certificateTemplateUrl: { type: String },
