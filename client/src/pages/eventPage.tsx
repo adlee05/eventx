@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import getTime from "@/utils/getTime.js";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
-import { AuthContext } from "@/context/AuthContext";
 import { Link } from "react-router-dom"
 
 function EventPage() {
@@ -20,10 +19,6 @@ function EventPage() {
     recreational: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300 mb-3",
     art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-3",
   }
-
-  // get username
-  const { userDetails } = useContext(AuthContext);
-  const userLink = `/users/${userDetails?.username}`;
 
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
@@ -35,6 +30,7 @@ function EventPage() {
   const [details, setDetails] = useState<EventType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const userLink = `/users/${details?.createdBy}`;
   // get event id
   const { id } = useParams();
 
@@ -104,7 +100,7 @@ function EventPage() {
             <p className="font-semibold">Event by</p>
             <Link to={userLink}>
               <Button variant="link" className="cursor-pointer">
-                {userDetails?.username}
+                {details?.createdBy}
               </Button>
             </Link>
           </div>
