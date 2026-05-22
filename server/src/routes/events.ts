@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/addEvent", authenticate, addEvent);
 router.get("/userEvents", authenticate, userEvents);
 router.get("/allEvents", getAllEvents);
-router.get("/:id", authenticate, eventById);
+router.get("/:id", eventById);
 router.put("/:id", authenticate, changeEventDetails);
 router.delete("/event/:id", authenticate, deleteEventById);
 

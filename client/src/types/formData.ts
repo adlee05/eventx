@@ -1,5 +1,3 @@
-import type { DateRange } from "react-day-picker";
-
 type formData = {
   title: string,
   desc: string,
@@ -8,9 +6,8 @@ type formData = {
   imgurl: string,
   category: string,
   startTime: Date,
-  endTime: Date,
+  startDate: Date,
   deadTime: Date,
-  eventDate: DateRange,
   deadDate: Date
 };
 

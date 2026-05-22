@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css'
 import Login from './pages/login.jsx';
-import SignUp from './pages/signup.jsx';
+import SignUp from './pages/Signup.jsx';
 import Home from "@/pages/home.jsx";
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Layout from "@/components/Layout.jsx"
@@ -14,7 +14,8 @@ import PastEvents from './pages/profile/pastEvents.js';
 import Contact from "@/pages/contact.js";
 import EventPage from "@/pages/eventPage.js"
 import Notify from "@/components/notification.jsx";
-import CreatePage from "@/pages/createPage.jsx"
+import CreatePage from "@/pages/CreatePage.jsx"
+import UserPage from '@/pages/UserPage.js';
 
 function App() {
 
@@ -28,10 +29,14 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/users/:id" element={<UserPage />} />
+          <Route path="/event">
+            <Route path=":id" element={<EventPage />} />
+          </Route>
+
 
           <Route element={<ProtectedRoute />}>
             <Route path="/event">
-              <Route path=":id" element={<EventPage />} />
               <Route path="create" element={<CreatePage />} />
             </Route>
             <Route path="/contact" element={<Contact />} />

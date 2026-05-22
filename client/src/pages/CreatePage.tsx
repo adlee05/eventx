@@ -21,7 +21,7 @@ function CreatePage() {
           <EventDetails register={register} control={control} errors={errors} />
         </span>
         <span className="my-5">
-          <EventTiming2 />
+          <EventTiming2 register={register} control={control} errors={errors} />
         </span>
         <Button type="submit" className="cursor-pointer" onClick={handleSubmit(onSubmit)}>Submit</Button>
       </FieldSet>
