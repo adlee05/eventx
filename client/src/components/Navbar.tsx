@@ -87,7 +87,9 @@ export default function NavbarComp() {
               {AuthStatus ?
                 <div className="flex flex-col gap-2">
                   <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
-                  <Button variant="outline"><Plus /> Create Event</Button>
+                  <Link to='/event/create'>
+                    <Button variant="outline"><Plus /> Create Event</Button>
+                  </Link>
                 </div> : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
               {location.pathname != '/' && <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>}
             </div>
