@@ -9,9 +9,9 @@ import { Badge } from "@/components/ui/badge"
 export function EventCard(props: EventProps) {
   const linkTo = `/event/${props._id}`;
   const categoryColors: Record<string, string> = {
-    tech: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 mb-3",
-    recreational: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300 mb-3",
-    art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-3",
+    tech: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 mb-1",
+    recreational: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300 mb-1",
+    art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-1",
   }
 
   return (
@@ -27,7 +27,7 @@ export function EventCard(props: EventProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition group-hover:from-black/95" />
 
         {/* Date + Location */}
-        <div className="relative z-10 flex flex-col gap-2 text-white text-sm">
+        <div className="relative z-10 flex flex-col gap-2 text-white md:text-sm text-xs">
 
           <div className="flex items-center gap-2">
             <IconClockHour3 size={16} />
@@ -45,11 +45,11 @@ export function EventCard(props: EventProps) {
           <Badge className={categoryColors[props.category]}>
             {props.category}
           </Badge>
-          <h1 className="font-semibold text-lg text-white leading-snug drop-shadow-md">
+          <h1 className="font-semibold text-sm md:text-lg text-white leading-snug drop-shadow-md">
             {props.title}
           </h1>
 
-          <p className="text-sm text-gray-200 mt-2 line-clamp-2">
+          <p className="text-sm text-gray-200 mt-1 line-clamp-2">
             {props.description}
           </p>
 
