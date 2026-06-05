@@ -38,13 +38,13 @@ function EventDetails({ register, control, errors }: Props) {
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="title" className="text-lg"><BookA /> Title</FieldLabel>
-          <Input id="title" type="text"  {...register("title", { required: "Title is required" })}></Input>
+          <Input id="title" type="text" maxLength={50}  {...register("title", { required: "Title is required" })}></Input>
           {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
           <FieldDescription>Set a well defined title for your event</FieldDescription>
         </Field>
         <Field>
           <FieldLabel htmlFor="desc" className="text-lg"><Captions /> Description</FieldLabel>
-          <Input id="desc" type="text" required {...register("desc", { required: "Description of the event is required" })}></Input>
+          <Input id="desc" type="text" maxLength={250} required {...register("desc", { required: "Description of the event is required" })}></Input>
           {errors.desc && <span className="text-red-500 text-sm">{errors.desc.message}</span>}
           <FieldDescription>Describe your event in detail</FieldDescription>
         </Field>
@@ -64,43 +64,45 @@ function EventDetails({ register, control, errors }: Props) {
           </Field>
           <Field>
             <FieldLabel htmlFor="maxnums" className="text-lg"><UsersRound /> Max Participants</FieldLabel>
-            <Input id="maxnums" type="number" max={100} min={1} required {...register("maxnums")}></Input>
+            <Input id="maxnums" defaultValue={100} type="number" max={100} min={1} required {...register("maxnums")}></Input>
             <FieldDescription>Max 100 Participants. Not specifying this will set the limit to 100</FieldDescription>
           </Field>
         </div>
 
-        <FieldLabel htmlFor="category" className="text-lg"><ChartBarStacked /> Category</FieldLabel>
-        <Controller
-          name="category"
-          control={control}
-          rules={{ required: "Selecting a category is mandatory" }}
-          render={({ field, fieldState }) => (
-            <>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="tech">Tech</SelectItem>
-                    <SelectItem value="recreational">Recreational</SelectItem>
-                    <SelectItem value="art">Art</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {fieldState.error && (
-                <p className="text-sm text-red-500 mt-1">
-                  {fieldState.error.message}
-                </p>
-              )}
-            </>
-          )}
-        >
-        </Controller>
+        <Field>
+          <FieldLabel htmlFor="category" className="text-lg"><ChartBarStacked /> Category</FieldLabel>
+          <Controller
+            name="category"
+            control={control}
+            rules={{ required: "Selecting a category is mandatory" }}
+            render={({ field, fieldState }) => (
+              <>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="tech">Tech</SelectItem>
+                      <SelectItem value="recreational">Recreational</SelectItem>
+                      <SelectItem value="art">Art</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {fieldState.error && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
+            )}
+          />
+        </Field>
       </FieldGroup >
+
 
     </>
   );
