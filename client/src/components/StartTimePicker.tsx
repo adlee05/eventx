@@ -7,25 +7,50 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
+import combineDateTime from "@/utils/combineDateTime"
 import { Controller } from "react-hook-form"
+
 // types
-import type { UseFormRegister, Control, FieldErrors } from "react-hook-form"
+import type { UseFormRegister, Control, UseFormGetValues } from "react-hook-form"
 import type { formData } from "@/types/formData"
 type Props = {
   register: UseFormRegister<formData>,
   rhfName0: "startDate" | "deadDate",
   rhfName1: "startTime" | "deadTime",
   control: Control<formData>,
-  errors: FieldErrors<formData>
+  getValues: UseFormGetValues<formData>
 }
 
-export function CalendarWithTime({ register, rhfName0, rhfName1, control, errors }: Props) {
+export function CalendarWithTime({ register, rhfName0, rhfName1, control, getValues }: Props) {
+  // timing validation function
+  const dateValidate = () => {
+    const startTime = combineDateTime(getValues('startDate'), getValues('startTime'));
+    const deadTime = combineDateTime(getValues('deadDate'), getValues('deadTime'));
+
+    const now = new Date();
+
+    if (!startTime || !deadTime)
+      return "Invalid time values";
+
+    if (startTime < deadTime)
+      return "Event cannot start before its registartion deadline, you dumbo.";
+
+    if (startTime < now || deadTime < now)
+      return "Events cannot start in the past.";
+
+    return true;
+  };
+
   return (
     <Card size="sm" className="mx-auto w-fit">
       <CardContent>
         <Controller
           name={rhfName0}
           control={control}
+          rules={{
+            required: "Select a Date!",
+            validate: dateValidate
+          }}
           render={
             ({ field, fieldState }) => (
               <div>
@@ -36,7 +61,7 @@ export function CalendarWithTime({ register, rhfName0, rhfName1, control, errors
                   className="p-0"
                 />
                 {fieldState.error && (
-                  <p className="text-sm text-red-500 mt-2">
+                  <p className="text-sm text-red-500 mt-2 max-w-full">
                     {fieldState.error.message}
                   </p>
                 )}
@@ -48,14 +73,14 @@ export function CalendarWithTime({ register, rhfName0, rhfName1, control, errors
       <CardFooter className="border-t bg-card">
         <FieldGroup>
           <Field>
-            <FieldLabel htmlFor="time-from">Start Time</FieldLabel>
+            <FieldLabel htmlFor="time-from">{rhfName0 == "startDate" ? "Start Time" : "Deadline"}</FieldLabel>
             <InputGroup>
               <InputGroupInput
                 id="time-from"
                 type="time"
                 step="1"
                 defaultValue="10:30:00"
-                {...register(rhfName1, { required: "please select a time" })}
+                {...register(rhfName1)}
                 className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
               <InputGroupAddon>
