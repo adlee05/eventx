@@ -5,9 +5,9 @@ type formData = {
   maxnums: number,
   imgurl: string,
   category: string,
-  startTime: Date,
+  startTime: string,
   startDate: Date,
-  deadTime: Date,
+  deadTime: string,
   deadDate: Date
 };
 

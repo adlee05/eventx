@@ -38,6 +38,7 @@ function Login() {
   // verify credentials: handle login
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("im clicked")
     // post user credentials
     try {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/auth/login`, credentials, {

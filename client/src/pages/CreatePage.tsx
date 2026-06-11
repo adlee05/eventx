@@ -1,5 +1,4 @@
 import EventDetails from "@/components/createEvent/EventDetails";
-import EventTiming from "@/components/createEvent/EventTiming";
 import EventTiming2 from "@/components/createEvent/EventTiming2";
 import {
   FieldSet,
@@ -9,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { type formData } from "@/types/formData";
 
 function CreatePage() {
-  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<formData>();
+  const { register, handleSubmit, control, formState: { errors }, getValues } = useForm<formData>();
+
   const onSubmit = (data: formData) => {
     console.log(data);
   }
@@ -21,7 +21,7 @@ function CreatePage() {
           <EventDetails register={register} control={control} errors={errors} />
         </span>
         <span className="my-5">
-          <EventTiming2 register={register} control={control} errors={errors} />
+          <EventTiming2 register={register} control={control} errors={errors} getValues={getValues} />
         </span>
         <Button type="submit" className="cursor-pointer" onClick={handleSubmit(onSubmit)}>Submit</Button>
       </FieldSet>

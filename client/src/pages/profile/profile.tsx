@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button";
 import { Link, Outlet } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
@@ -36,7 +36,7 @@ function Profile() {
   const handleClick = (id: number) => {
     setSelected(id);
   };
-  const {userDetails} = useContext(AuthContext);
+  const { userDetails } = useContext(AuthContext);
 
   return (<>
     <div className="max-w-4xl mx-auto my-5 px-4">

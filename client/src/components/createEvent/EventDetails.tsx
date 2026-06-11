@@ -100,6 +100,7 @@ function EventDetails({ register, control, errors }: Props) {
               </>
             )}
           />
+          <FieldDescription>Selecting the correct category will help you find the correct audience for your event.</FieldDescription>
         </Field>
       </FieldGroup >
 
