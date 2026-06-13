@@ -6,12 +6,25 @@ import {
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button";
 import { type formData } from "@/types/formData";
+import combineDateTime from "@/utils/combineDateTime";
+import { AuthContext } from "@/context/AuthContext";
+import { useContext } from "react";
 
 function CreatePage() {
   const { register, handleSubmit, control, formState: { errors }, getValues } = useForm<formData>();
+  const { userDetails } = useContext(AuthContext);
 
   const onSubmit = (data: formData) => {
-    console.log(data);
+    const cleanedData = {
+      title: data.title,
+      description: data.description,
+      startDate: combineDateTime(data.startDate, data.startTime),
+      deadDate: combineDateTime(data.deadDate, data.deadTime),
+      category: data.category,
+      maxParticipants: data.maxParticipants,
+      imageUrl: data.imageUrl,
+      createdBy: userDetails?.username
+    }
   }
 
   return <>

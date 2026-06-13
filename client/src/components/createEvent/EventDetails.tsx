@@ -44,8 +44,8 @@ function EventDetails({ register, control, errors }: Props) {
         </Field>
         <Field>
           <FieldLabel htmlFor="desc" className="text-lg"><Captions /> Description</FieldLabel>
-          <Input id="desc" type="text" maxLength={250} required {...register("desc", { required: "Description of the event is required" })}></Input>
-          {errors.desc && <span className="text-red-500 text-sm">{errors.desc.message}</span>}
+          <Input id="desc" type="text" maxLength={250} required {...register("description", { required: "Description of the event is required" })}></Input>
+          {errors.description && <span className="text-red-500 text-sm">{errors.description.message}</span>}
           <FieldDescription>Describe your event in detail</FieldDescription>
         </Field>
         <Field>
@@ -57,14 +57,14 @@ function EventDetails({ register, control, errors }: Props) {
         <div className="md:grid-cols-2 grid-cols-1 grid gap-5">
           <Field>
             <FieldLabel htmlFor="imgurl" className="text-lg"><Link /> Image URL</FieldLabel>
-            <Input id="imgurl" type="text" required {...register("imgurl")}></Input>
+            <Input id="imgurl" type="text" required {...register("imageUrl")}></Input>
             <FieldDescription>
               Uploading images is not supported yet, I'm working on it to add it in the future.
             </FieldDescription>
           </Field>
           <Field>
             <FieldLabel htmlFor="maxnums" className="text-lg"><UsersRound /> Max Participants</FieldLabel>
-            <Input id="maxnums" defaultValue={100} type="number" max={100} min={1} required {...register("maxnums")}></Input>
+            <Input id="maxnums" defaultValue={100} type="number" max={100} min={1} required {...register("maxParticipants")}></Input>
             <FieldDescription>Max 100 Participants. Not specifying this will set the limit to 100</FieldDescription>
           </Field>
         </div>

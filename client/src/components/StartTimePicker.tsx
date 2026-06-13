@@ -32,7 +32,7 @@ export function CalendarWithTime({ register, rhfName0, rhfName1, control, getVal
     if (!startTime || !deadTime)
       return "Invalid time values";
 
-    if (startTime < deadTime)
+    if (startTime <= deadTime)
       return "Event cannot start before its registartion deadline, you dumbo.";
 
     if (startTime < now || deadTime < now)
