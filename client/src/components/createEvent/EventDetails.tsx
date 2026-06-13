@@ -38,33 +38,86 @@ function EventDetails({ register, control, errors }: Props) {
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="title" className="text-lg"><BookA /> Title</FieldLabel>
-          <Input id="title" type="text" maxLength={50}  {...register("title", { required: "Title is required" })}></Input>
+          <Input id="title" type="text" minLength={5} maxLength={50} {...register("title", {
+            required: "Title is required",
+            minLength: {
+              value: 5,
+              message: "Title should be atleast 5 characters long"
+            },
+            maxLength: {
+              value: 200,
+              message: "Title should be atmost 200 characters long"
+            }
+          })}>
+          </Input>
           {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
           <FieldDescription>Set a well defined title for your event</FieldDescription>
         </Field>
         <Field>
           <FieldLabel htmlFor="desc" className="text-lg"><Captions /> Description</FieldLabel>
-          <Input id="desc" type="text" maxLength={250} required {...register("description", { required: "Description of the event is required" })}></Input>
+          <Input id="desc" type="text" minLength={5} maxLength={250} required {...register("description", {
+            required: "Description of the event is required",
+            minLength: {
+              value: 5,
+              message: "Description should be atleast 5 characters long"
+            },
+            maxLength: {
+              value: 200,
+              message: "Description should be atmost 200 characters long"
+            }
+          })}></Input>
           {errors.description && <span className="text-red-500 text-sm">{errors.description.message}</span>}
           <FieldDescription>Describe your event in detail</FieldDescription>
         </Field>
         <Field>
           <FieldLabel htmlFor="location" className="text-lg"><MapPinPlusInside /> Location</FieldLabel>
-          <Input id="location" type="text" required {...register("location", { required: "Specifying location is a must." })}></Input>
+          <Input id="location" type="text" minLength={10} required {...register("location", {
+            required: "Specifying location is a must.",
+            minLength: {
+              value: 10,
+              message: "Location should be atleast 5 characters long"
+            },
+            maxLength: {
+              value: 300,
+              message: "Location should be atmost 300 characters long"
+            }
+          })}></Input>
           {errors.location && <span className="text-red-500 text-sm">{errors.location.message}</span>}
           <FieldDescription>Specify the location of the event in detail</FieldDescription>
         </Field>
         <div className="md:grid-cols-2 grid-cols-1 grid gap-5">
           <Field>
             <FieldLabel htmlFor="imgurl" className="text-lg"><Link /> Image URL</FieldLabel>
-            <Input id="imgurl" type="text" required {...register("imageUrl")}></Input>
+            <Input id="imgurl" type="text" minLength={10} maxLength={300} {...register("imageUrl", {
+              minLength: {
+                value: 10,
+                message: "ImageURL should be atleast 5 characters long"
+              },
+              maxLength: {
+                value: 300,
+                message: "ImageURL should be atmost 300 characters long"
+              },
+            })}></Input>
+            {errors.imageUrl && <span className="text-red-500 text-sm">{errors.imageUrl.message}</span>}
             <FieldDescription>
               Uploading images is not supported yet, I'm working on it to add it in the future.
             </FieldDescription>
           </Field>
           <Field>
             <FieldLabel htmlFor="maxnums" className="text-lg"><UsersRound /> Max Participants</FieldLabel>
-            <Input id="maxnums" defaultValue={100} type="number" max={100} min={1} required {...register("maxParticipants")}></Input>
+            <Input id="maxnums" defaultValue={100} type="number" max={100} min={1} required {...register("maxParticipants", {
+              max: {
+                value: 100,
+                message: "Max 100 participants are supported"
+              },
+              min: {
+                value: 1,
+                message: "Atleast one member should be able to signup for the event"
+              },
+              required: "This field is required"
+            })}></Input>
+
+            {errors.maxParticipants && <span className="text-red-500 text-sm">{errors.maxParticipants.message}</span>}
             <FieldDescription>Max 100 Participants. Not specifying this will set the limit to 100</FieldDescription>
           </Field>
         </div>
@@ -103,8 +156,6 @@ function EventDetails({ register, control, errors }: Props) {
           <FieldDescription>Selecting the correct category will help you find the correct audience for your event.</FieldDescription>
         </Field>
       </FieldGroup >
-
-
     </>
   );
 }
