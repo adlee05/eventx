@@ -2,22 +2,18 @@ import * as z from "zod";
 
 const formDataShape = z.object({
   title: z.string().trim().min(5).max(50),
-  desc: z.string().trim().min(5).max(200),
+  description: z.string().trim().min(5).max(200),
   location: z.string().trim().min(10).max(300),
-  maxnums: z.number().int().min(1).max(100),
-  imgurl: z.string().min(10).max(300),
+  maxParticipants: z.coerce.number().int().min(1).max(100),
+  imageUrl: z.string().min(0).max(300),
   category: z.enum(["recreation", "tech", "art"]),
   startDate: z.coerce.date(),
   deadDate: z.coerce.date(),
   createdBy: z.string().min(1)
-}).refine((d) => {
-  const diffMs = d.startDate.getTime() - d.deadDate.getTime()
-  const oneHourMs = 60 * 60 * 1000
-  return diffMs >= oneHourMs
-},
+}).refine((d) => d.startDate > d.deadDate,
   {
-    message: "Registration deadline must be at least 1 hour before the event start time",
-    path: ["deadlineTime"],
+    message: "Registration deadline should be strictly less than start time",
+    path: ["deadDate"],
   }
 )
 
