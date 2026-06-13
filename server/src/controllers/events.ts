@@ -1,74 +1,38 @@
 import { Request, Response } from "express";
 import { EventModel } from "../models/event.js";
-import { formDataSer } from "../types/formData.js";
 import { UserModel } from "../models/user.js";
+import { formDataShape } from "../schemas/event.schema.js";
+import * as z from "zod";
 
 // add a new event
 async function addEvent(req: Request, res: Response) {
-  const data: formDataSer = req.body.data;
+  // zod validation on shape
+  const result = formDataShape.safeParse(req.body.data);
 
-  // validation
-
-  // validate title, desc and urls
-  if (
-    data.title.trim().length > 50 ||
-    data.desc.trim().length > 200 ||
-    data.imgurl.trim().length > 300 ||
-    data.location.trim().length > 300
-  ) {
-    return res.json({
-      success: false,
-      message: "Invalid length of form values, please check the length of either title, desc, imgurl or location",
-    });
-  }
-
-  // validate maxnums
-  if (data.maxnums <= 0 || data.maxnums > 100) {
-    return res.json({
-      success: false,
-      message: "Invalid value for maxnums",
-    });
-  }
-
-  if (!["recreational", "tech", "art"].includes(data.category)) {
-    return res.json({
-      success: false,
-      message: "Invalid category type"
-    });
-  }
-
-  // validate dates
-  const now = new Date();
-
-  const startDate = (
-    data.startDate instanceof Date ? data.startDate : new Date(data.startDate)
-  );
-
-  const deadDate = (
-    data.deadDate instanceof Date ? data.deadDate : new Date(data.deadDate)
-  );
-
-  if (startDate <= now || deadDate <= now) {
-    return res.json({
-      success: false,
-      message: "Event cannot start in the past",
+  if (!result.success) {
+    return res.status(400).json({
+      title: "Invalid request data",
+      message: result.error.message,
+      success: false
     })
   }
+  const data = result.data;
 
-  if (startDate <= deadDate) {
-    return res.json({
-      success: false,
-      message: "Start time should be strictly after the deadline time",
-    })
-  }
-
+  // extra validation
   // validate user
   const userExists = await UserModel.exists({ username: data.createdBy });
 
-  if (!userExists) return res.json({
+  if (!userExists) return res.status(404).json({
     success: false,
+    title: "Bad access",
     message: "User does not exist",
   })
+
+  // add the event to the db
+  const event = new EventModel(data);
+  await event.save();
+
+  console.log("event added successfully");
 }
 
 // get all available events

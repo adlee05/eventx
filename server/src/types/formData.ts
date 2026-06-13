@@ -1,9 +1,9 @@
 type formDataSer = {
   title: string,
-  desc: string,
+  description: string,
   location: string,
-  maxnums: number,
-  imgurl: string,
+  maxParticipants: number,
+  imageUrl: string,
   category: string,
   startDate: Date,
   deadDate: Date,

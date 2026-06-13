@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-const Data = z.object({
+const formDataShape = z.object({
   title: z.string().trim().min(5).max(50),
   desc: z.string().trim().min(5).max(200),
   location: z.string().trim().min(10).max(300),
@@ -20,3 +20,5 @@ const Data = z.object({
     path: ["deadlineTime"],
   }
 )
+
+export { formDataShape };

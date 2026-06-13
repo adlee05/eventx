@@ -1,9 +1,10 @@
 import express from "express";
 import authenticate from "../middleware/authenticate.js";
 import { EventModel } from "../models/event.js";
-import { addEvent, 
-  getAllEvents, 
-  eventById 
+import {
+  addEvent,
+  getAllEvents,
+  eventById
 } from "../controllers/events.js";
 
 const router = express.Router();
