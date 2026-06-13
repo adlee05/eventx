@@ -8,17 +8,26 @@ import * as z from "zod";
 async function addEvent(req: Request, res: Response) {
   // zod validation on shape
   const result = formDataShape.safeParse(req.body.data);
+  console.log(req.body.data);
 
   if (!result.success) {
     return res.status(400).json({
-      title: "Invalid request data",
       message: result.error.message,
       success: false
     })
   }
   const data = result.data;
 
-  // extra validation
+  // imp validation
+  const now = new Date();
+
+  if (data.startDate <= now || data.deadDate <= now) {
+    return res.status(400).json({
+      message: "Events cannot start in the past, should strictly be in the future",
+      success: false
+    })
+  }
+
   // validate user
   const userExists = await UserModel.exists({ username: data.createdBy });
 
