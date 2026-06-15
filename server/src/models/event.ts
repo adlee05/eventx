@@ -9,7 +9,6 @@ const EventSchema = new Schema(
     imageUrl: { type: String },
     createdBy: { type: String },
     registeredUsers: [{ type: Schema.Types.ObjectId, ref: "User", },],
-    attendees: [{ type: Schema.Types.ObjectId, ref: "User", },],
     maxParticipants: { type: Number },
     deadDate: { type: Date },
     category: { type: String, enum: ["recreational", "tech", "art"], default: "recreational" },

@@ -8,7 +8,6 @@ import * as z from "zod";
 async function addEvent(req: Request, res: Response) {
   // zod validation on shape
   const result = formDataShape.safeParse(req.body.data);
-  console.log(req.body.data);
 
   if (!result.success) {
     return res.status(400).json({
@@ -47,7 +46,9 @@ async function addEvent(req: Request, res: Response) {
 // get all available events
 async function getAllEvents(req: Request, res: Response) {
   try {
-    const allEvents = await EventModel.find().sort({ date: -1 });
+    const allEvents = await EventModel.find()
+      .select("title description category imageUrl location startDate _id")
+      .sort({ startDate: -1 });
 
     return res.status(200).json({
       message: "All events fetched successfully!",

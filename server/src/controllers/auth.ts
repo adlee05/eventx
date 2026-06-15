@@ -40,7 +40,6 @@ async function login(req: Request, res: Response) {
   let details;
   try {
     details = await UserModel.findOne({ email: req.body.email }, 'username email password role');
-    console.log(details);
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -101,7 +100,6 @@ async function signup(req: Request, res: Response) {
   }
 
   const result = zodSignUp.safeParse(userDetails);
-  console.log(result);
   if (!result.success) {
     console.log(result.error.format());
     return res.status(400).json({
@@ -191,8 +189,6 @@ async function me(req: Request, res: Response) {
       success: false
     });
   }
-
-  console.log(uname)
 
   res.status(200).json({
     data: req.user,
