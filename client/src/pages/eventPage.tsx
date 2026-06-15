@@ -4,13 +4,12 @@ import axios, { AxiosError } from "axios";
 import { NotifyContext } from "@/context/notifyContext";
 import type { EventType } from "@/types/event-details";
 import { Spinner } from "@/components/ui/spinner";
-import { formatDate } from "@/utils/formatDate";
 import { IconClockHour3 } from '@tabler/icons-react';
 import { Button } from "@/components/ui/button";
-import getTime from "@/utils/getTime.js";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
+import { getDateTime } from "@/utils/getDateTime";
 
 function EventPage() {
   // badges
@@ -92,7 +91,6 @@ function EventPage() {
 
           <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
             <IconClockHour3 size={18} />
-            <span>{formatDate(details.startTime)}</span>
             <span>•</span>
             <span>{details.location}</span>
           </div>
@@ -125,17 +123,17 @@ function EventPage() {
 
         <div className="p-6 border rounded-xl bg-card space-y-5 h-fit">
 
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3 text-sm font-bold text-muted-foreground">
             <Calendar className="w-4 h-4" />
             <span>
-              {formatDate(details.startTime)} – {formatDate(details.endTime)}
+              {getDateTime(details.startDate)} onwards.
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-lg font-semibold">
+          <div className="flex items-center gap-3 text-sm font-bold font-semibold">
             <Clock className="w-4 h-4" />
             <span>
-              {getTime(details.startTime)} – {getTime(details.endTime)}
+              {getDateTime(details.deadDate)} deadline.
             </span>
           </div>
 

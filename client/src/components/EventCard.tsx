@@ -1,10 +1,10 @@
 import { IconClockHour3 } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import type { EventProps } from "@/types/event-props";
-import { formatDate } from "@/utils/formatDate";
 import { Bookmark, ChevronRight, MapPin } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Badge } from "@/components/ui/badge"
+import { getDateTime } from '@/utils/getDateTime';
 
 export function EventCard(props: EventProps) {
   const linkTo = `/event/${props._id}`;
@@ -31,7 +31,7 @@ export function EventCard(props: EventProps) {
 
           <div className="flex items-center gap-2">
             <IconClockHour3 size={16} />
-            {formatDate(props.startTime)}
+            {getDateTime(props.startDate)}
           </div>
 
           <div className="flex items-center gap-2 text-gray-200">
@@ -49,7 +49,7 @@ export function EventCard(props: EventProps) {
             {props.title}
           </h1>
 
-          <p className="text-sm text-gray-200 mt-1 line-clamp-2">
+          <p className="text-sm text-gray-200 mt-2 line-clamp-2">
             {props.description}
           </p>
 

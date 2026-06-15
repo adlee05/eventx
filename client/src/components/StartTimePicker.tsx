@@ -7,7 +7,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import combineDateTime from "@/utils/combineDateTime"
+import { combineDateTime } from "@/utils/combineDateTime"
 import { Controller } from "react-hook-form"
 
 // types

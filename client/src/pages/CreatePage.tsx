@@ -6,11 +6,11 @@ import {
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button";
 import { type formData } from "@/types/formData";
-import combineDateTime from "@/utils/combineDateTime";
 import { AuthContext } from "@/context/AuthContext";
 import { useContext } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { NotifyContext } from "@/context/notifyContext";
+import { combineDateTime } from "@/utils/combineDateTime";
 
 function CreatePage() {
   const { register, handleSubmit, control, formState: { errors }, getValues } = useForm<formData>();

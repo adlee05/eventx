@@ -20,7 +20,7 @@ function Events() {
     const fetchEvents = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_SERVER_URI}/event/allEvents`, {withCredentials: true}
+          `${import.meta.env.VITE_SERVER_URI}/event/allEvents`, { withCredentials: true }
         );
 
         setEvents(res.data.data);
@@ -55,14 +55,13 @@ function Events() {
           {events.map((event, i) => (
             <EventCard
               key={i}
-              _id={event._id}
-              startTime={event.startTime}
-              duration="4hrs"
-              location={event.location}
               title={event.title}
+              _id={event._id}
               description={event.description}
-              imageUrl={event.imageUrl}
+              location={event.location}
               category={event.category}
+              imageUrl={event.imageUrl}
+              startDate={event.startDate}
             />
           ))}
         </div>
@@ -71,4 +70,4 @@ function Events() {
   );
 }
 
-export default Events; 
+export default Events;
