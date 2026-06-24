@@ -71,10 +71,14 @@ function EventPage() {
     return <p className="text-center">Event not found!</p>
   }
 
+  const imgUrl = (
+    details.imageUrl == "" ? "https://images.pexels.com/photos/17415163/pexels-photo-17415163.jpeg" : details.imageUrl
+  );
+
   return (
     <div className="max-w-5xl mx-auto my-10 px-5 md:px-0">
       <img
-        src={`${details.imageUrl}?w=1200`}
+        src={`${imgUrl}?w=1200`}
         alt="Event Image"
         className="w-full h-[350px] md:h-[420px] object-cover rounded-xl"
       />

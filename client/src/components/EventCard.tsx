@@ -14,13 +14,17 @@ export function EventCard(props: EventProps) {
     art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-1",
   }
 
+  const imgUrl = (
+    props.imageUrl == "" ? "https://images.pexels.com/photos/17415163/pexels-photo-17415163.jpeg" : props.imageUrl
+  );
+
   return (
     <div className="group w-full max-w-sm">
 
       <div
         className="relative h-80 sm:h-96 rounded-xl shadow-xl w-full flex flex-col justify-between p-4 bg-cover bg-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]"
         style={{
-          backgroundImage: `url(${props.imageUrl}?w=800)`
+          backgroundImage: `url(${imgUrl}?w=800)`
         }}
       >
 
