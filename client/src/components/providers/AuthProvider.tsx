@@ -3,6 +3,7 @@ import axios from "axios";
 import { AuthContext } from "@/context/AuthContext.js";
 
 import type { ReactNode } from "react";
+import type { UserDetails } from "@/types/context.userDetails";
 
 interface Props {
   children: ReactNode;
@@ -11,7 +12,7 @@ interface Props {
 export function AuthProvider({ children }: Props) {
   const [AuthStatus, setAuthStatus] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [userDetails, setUserDetails] = useState();
+  const [userDetails, setUserDetails] = useState<UserDetails | undefined>();
 
   useEffect(() => {
     const checkAuth = async (): Promise<void> => {
@@ -34,7 +35,7 @@ export function AuthProvider({ children }: Props) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ AuthStatus, setAuthStatus, loading, setLoading, userDetails }}>
+    <AuthContext.Provider value={{ AuthStatus, setAuthStatus, loading, setLoading, userDetails, setUserDetails }}>
       {children}
     </AuthContext.Provider>
   );

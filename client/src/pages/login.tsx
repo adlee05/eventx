@@ -9,7 +9,7 @@ import { NotifyContext } from "@/context/notifyContext";
 import type { CredType } from "@/types/auth-card";
 
 function Login() {
-  const { setAuthStatus, AuthStatus, loading } = useContext(AuthContext);
+  const { setAuthStatus, AuthStatus, loading, setUserDetails } = useContext(AuthContext);
   const navigate = useNavigate();
   useEffect(() => {
     if (AuthStatus && !loading) {
@@ -38,7 +38,6 @@ function Login() {
   // verify credentials: handle login
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("im clicked")
     // post user credentials
     try {
       const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/auth/login`, credentials, {
@@ -46,6 +45,24 @@ function Login() {
       });
       if (res.data.success) {
         setAuthStatus(true);
+        try {
+          const res = await axios.get(
+            import.meta.env.VITE_SERVER_URI + "/auth/me",
+            { withCredentials: true }
+          );
+
+          if (res.data.success) {
+            setUserDetails(res.data.userDetails);
+          }
+        } catch (e) {
+          if (axios.isAxiosError(e)) {
+            showNotification({
+              title: "Loading context failed",
+              desc: "Reload the page once.",
+              type: "failure"
+            })
+          }
+        }
         navigate("/", { replace: true })
       } else {
         console.log("login failed!");
@@ -55,6 +72,7 @@ function Login() {
           type: "failure"
         })
       }
+
     } catch (e) {
       if (axios.isAxiosError(e)) {
         showNotification({

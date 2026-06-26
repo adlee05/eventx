@@ -8,10 +8,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { NotifyContext } from "@/context/notifyContext";
 
 function Details() {
-  const { setAuthStatus } = useContext(AuthContext);
-
-  // get userdetails
-  const { userDetails } = useContext(AuthContext);
+  const { setAuthStatus, userDetails, setUserDetails } = useContext(AuthContext);
 
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
@@ -36,6 +33,7 @@ function Details() {
 
       if (res.data.success) {
         setAuthStatus(false);
+        setUserDetails(undefined);
       }
     } catch {
       showNotification({
