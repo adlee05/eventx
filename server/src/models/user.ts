@@ -4,14 +4,14 @@ if (mongoose.models.User) {
   delete mongoose.models.User;
 }
 
- const UserSchema = new Schema(
+const UserSchema = new Schema(
   {
     username: { type: String, required: true, unique: true },
-    firstname: {type: String},
-    lastname: {type: String},
+    firstname: { type: String },
+    lastname: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    location: {type: String},
+    location: { type: String },
 
     role: { type: String, enum: ["user", "admin"], default: "user", },
 

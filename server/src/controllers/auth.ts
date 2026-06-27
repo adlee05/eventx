@@ -140,7 +140,7 @@ async function signup(req: Request, res: Response) {
       success: true,
     });
 
-  } catch (e: Error | undefined) {
+  } catch (e: any) {
     console.log(e);
 
     // differentiate b/w mongodb and bcrypt errors
@@ -199,7 +199,8 @@ async function me(req: Request, res: Response) {
       firstname: uname.firstname,
       lastname: uname.lastname,
       bio: uname.bio,
-      location: uname.location
+      location: uname.location,
+      userId: req.user.userId
     }
   })
 }
