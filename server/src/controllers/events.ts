@@ -3,6 +3,10 @@ import { EventModel } from "../models/event.js";
 import { UserModel } from "../models/user.js";
 import { formDataShape } from "../schemas/event.schema.js";
 import * as z from "zod";
+import mongoose from "mongoose";
+import { RegistrationModel } from "../models/registrations.js";
+import { MongoServerError } from "mongodb";
+import { registrationSchema } from "../schemas/event.registration.js";
 
 // add a new event
 async function addEvent(req: Request, res: Response) {
@@ -81,7 +85,7 @@ async function eventById(req: Request, res: Response) {
     }
 
     res.json({
-      message: " Event Fetched Sucessfully!",
+      message: "Event Fetched Sucessfully!",
       data: event,
       success: true
     });
@@ -92,8 +96,51 @@ async function eventById(req: Request, res: Response) {
       message: "Failed to fetch Event!",
       success: false
     });
-
   }
 }
 
-export { addEvent, getAllEvents, eventById };
+// register for an event 
+async function register(req: Request, res: Response) {
+  // validate data
+  const result = registrationSchema.safeParse(req.body.data);
+
+  if (!result.success) {
+    return res.status(400).json({
+      message: "Invalid data shape, check eventId " + result.error.message,
+      success: false
+    })
+  }
+  const data = result.data;
+
+  try {
+    // check if user and event exist
+    const eventExists = await EventModel.exists({ _id: data.eventId });
+    if (!eventExists) return res.status(404).json({
+      success: false,
+      message: "Event does not exist",
+    })
+
+    const registration = new RegistrationModel(data);
+    await registration.save();
+
+    return res.status(200).json({
+      message: "successfully registered",
+      success: true
+    });
+  }
+  catch (e) {
+    if (e instanceof MongoServerError && e.code === 11000) {
+      return res.status(409).json({
+        message: "Already registered",
+        success: false
+      });
+    } else {
+      return res.status(500).json({
+        message: "Internal Server Error",
+        success: false
+      });
+    }
+  }
+}
+
+export { addEvent, getAllEvents, eventById, register };
