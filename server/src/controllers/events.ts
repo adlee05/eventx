@@ -102,7 +102,7 @@ async function eventById(req: Request, res: Response) {
 // register for an event 
 async function register(req: Request, res: Response) {
   // validate data
-  const result = registrationSchema.safeParse(req.body.data);
+  const result = registrationSchema.safeParse(req.body);
 
   if (!result.success) {
     return res.status(400).json({
@@ -120,7 +120,10 @@ async function register(req: Request, res: Response) {
       message: "Event does not exist",
     })
 
-    const registration = new RegistrationModel(data);
+    const registration = new RegistrationModel({
+      userId: req.user.userId,
+      eventId: data.eventId
+    });
     await registration.save();
 
     return res.status(200).json({
