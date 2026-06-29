@@ -9,7 +9,6 @@ const formDataShape = z.object({
   category: z.enum(["recreation", "tech", "art"]),
   startDate: z.coerce.date(),
   deadDate: z.coerce.date(),
-  createdBy: z.string().min(1)
 }).refine((d) => d.startDate > d.deadDate,
   {
     message: "Registration deadline should be strictly less than start time",

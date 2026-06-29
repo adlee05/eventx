@@ -13,8 +13,8 @@ config({ path: path.join(__dirname, "../../.env") });
 // validate vars to make sure they exist
 const envSchema = z.object({
   mongo_uri: z.string().url(),
-  jwt_secret: z.string().min(32), // optional but recommended
-  port: z.coerce.number().default(3000),
+  jwt_secret: z.string().min(32),
+  port: z.coerce.number().default(5000),
   mongo_local: z.string().min(1),
   env_type: z.enum(["dev", "prod", "test"]),
 });

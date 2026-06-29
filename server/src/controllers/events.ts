@@ -24,27 +24,40 @@ async function addEvent(req: Request, res: Response) {
   // imp validation
   const now = new Date();
 
+  if (data.deadDate >= data.startDate) {
+    return res.status(400).json({
+      success: false,
+      message: "Registration deadline must be before the event starts."
+    });
+  }
+
   if (data.startDate <= now || data.deadDate <= now) {
     return res.status(400).json({
-      message: "Events cannot start in the past, should strictly be in the future",
+      message: "Both event start and registration deadline must be in the future.",
       success: false
     })
   }
 
-  // validate user
-  const userExists = await UserModel.exists({ username: data.createdBy });
-
-  if (!userExists) return res.status(404).json({
-    success: false,
-    title: "Bad access",
-    message: "User does not exist",
-  })
-
   // add the event to the db
-  const event = new EventModel(data);
-  await event.save();
+  try {
+    const event = new EventModel({
+      ...data,
+      createdBy: req.user.userId
+    });
+    await event.save();
+  } catch (e) {
+    console.log(e);
 
-  console.log("event added successfully");
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false
+    })
+  }
+
+  return res.status(201).json({
+    message: "Event created successfully",
+    success: true
+  })
 }
 
 // get all available events
