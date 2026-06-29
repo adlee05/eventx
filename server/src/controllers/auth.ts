@@ -1,17 +1,14 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { UserModel } from "../models/user.js";
-import * as z from 'zod';
 import envs from "../config/index.js";
 
 // type 
 import type { Request, Response } from "express";
 
-// login zod schema
-const zodLogin = z.object({
-  email: z.string().email(),
-  password: z.string().trim().min(8, "Password too short.")
-});
+// schemas
+import { zodSignUp, zodLogin } from "../schemas/auth.schema.js";
+
 
 // cookie options
 const cookieOpts = {
@@ -32,7 +29,7 @@ async function login(req: Request, res: Response) {
     console.log(result.error);
     return res.status(400).json({
       message: "Credentials do not conform to rules",
-      error: result.error.format(),
+      error: result.error,
     });
   }
 
@@ -84,13 +81,6 @@ async function login(req: Request, res: Response) {
     success: true,
   });
 }
-
-// signup zod schema
-const zodSignUp = z.object({
-  username: z.string().trim().min(4, "Username too Short!").max(12, "Username too long!"),
-  email: z.string().email("Invalid email address."),
-  password: z.string().trim().min(8, "Password too short.")
-});
 
 async function signup(req: Request, res: Response) {
   const userDetails = {
