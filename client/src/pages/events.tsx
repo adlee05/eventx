@@ -2,6 +2,7 @@ import { EventCard } from "@/components/EventCard";
 import { useEffect, useContext, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { NotifyContext } from "@/context/notifyContext";
+import { Filters } from "@/components/Filters";
 
 // types
 import type { EventProps } from "@/types/event-props";
@@ -47,10 +48,16 @@ function Events() {
   return (
     <>
       <div className="mx-4 sm:mx-auto max-w-5xl my-10">
-        <div className="greeting my-10 text-center sm:text-left">
-          <h1 className="text-lg font-bold">Events</h1>
-          <p className="text-base">View all available events</p>
+        <div className="greeting my-10 flex justify-between sm:text-left">
+          <div>
+            <h1 className="text-lg font-bold">Events</h1>
+            <p className="text-base">View all available events</p>
+          </div>
+          <div>
+            <Filters />
+          </div>
         </div>
+
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
           {events.map((event, i) => (
             <EventCard

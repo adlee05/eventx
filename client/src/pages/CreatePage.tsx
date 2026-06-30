@@ -6,20 +6,20 @@ import {
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button";
 import { type formData } from "@/types/formData";
-import { AuthContext } from "@/context/AuthContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { NotifyContext } from "@/context/notifyContext";
 import { combineDateTime } from "@/utils/combineDateTime";
 
 function CreatePage() {
   const { register, handleSubmit, control, formState: { errors }, getValues } = useForm<formData>();
-  const { userDetails } = useContext(AuthContext);
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
     throw new Error("Cannot use context outside its scope.");
   }
   const [, showNotification] = notifyContext;
+
+  const [isDisabled, setIsDisabled] = useState(false);
 
 
   const onSubmit = async (data: formData) => {
@@ -32,12 +32,9 @@ function CreatePage() {
         category: data.category,
         maxParticipants: data.maxParticipants,
         imageUrl: data.imageUrl,
-        createdBy: userDetails?.username,
         location: data.location
       }
     }
-
-    console.log(cleanedData);
 
     try {
       const result = await axios.post(`${import.meta.env.VITE_SERVER_URI}/event/addEvent`, cleanedData, {
@@ -50,6 +47,8 @@ function CreatePage() {
           title: "Event Saved Successfully",
           desc: result.data.message
         })
+
+        setIsDisabled(true);
       } else {
         showNotification({
           type: "failure",
@@ -83,7 +82,7 @@ function CreatePage() {
         <span className="my-5">
           <EventTiming2 register={register} control={control} errors={errors} getValues={getValues} />
         </span>
-        <Button type="submit" className="cursor-pointer" onClick={handleSubmit(onSubmit)}>Submit</Button>
+        <Button type="submit" className="cursor-pointer" disabled={isDisabled} onClick={handleSubmit(onSubmit)}>Submit</Button>
       </FieldSet>
     </div>
   </>;

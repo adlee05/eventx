@@ -25,6 +25,9 @@ function EventPage() {
   }
   const [, showNotification] = notifyContext;
 
+  // prevent constant registers
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // event details store
   const [details, setDetails] = useState<EventType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -60,6 +63,74 @@ function EventPage() {
     eventDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [id]);
+
+  const handleRegister = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      if (!details?.registered) {
+        const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/event/register`, {
+          eventId: id
+        }, {
+          withCredentials: true,
+        });
+
+        if (res.data.success) {
+          showNotification({
+            title: "Registered Succesfully",
+            desc: "You have succesfully registered",
+            type: "success"
+          })
+
+          setDetails((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              registered: true
+            }
+          })
+        }
+      } else {
+        const res = await axios.delete(
+          `${import.meta.env.VITE_SERVER_URI}/event/deleteRegistration`,
+          {
+            data: {
+              eventId: id,
+            },
+            withCredentials: true,
+          }
+        );
+
+        if (res.data.success) {
+          showNotification({
+            title: "Unregistered Succesfully",
+            desc: res.data.message,
+            type: "success"
+          })
+
+          setDetails((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              registered: false
+            }
+          })
+        }
+      }
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        showNotification({
+          title: "Error Registering for Events",
+          desc: e.response?.data?.message,
+          type: "failure"
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   if (loading) {
     return <div className="mx-auto flex justify-center">
@@ -108,8 +179,8 @@ function EventPage() {
           </div>
         </div>
 
-        <Button className="md:w-auto w-full cursor-pointer">
-          Register
+        <Button className="md:w-auto w-full cursor-pointer" disabled={isSubmitting} onClick={handleRegister}>
+          {isSubmitting ? <Spinner /> : details.registered ? "Unregister" : "Register"}
         </Button>
 
       </div>
@@ -134,7 +205,7 @@ function EventPage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-sm font-bold font-semibold">
+          <div className="flex items-center gap-3 text-sm font-semibold">
             <Clock className="w-4 h-4" />
             <span>
               {getDateTime(details.deadDate)} deadline.
