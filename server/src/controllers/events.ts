@@ -84,25 +84,44 @@ async function getAllEvents(req: Request, res: Response) {
 // Get event details by ID
 async function eventById(req: Request, res: Response) {
   try {
-
     const { id } = req.params;
+    const result = registrationSchema.safeParse({ eventId: id });
 
-    const event = await EventModel.findById(id).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt");
-
-    if (!event) {
+    if (!result.success) {
       return res.status(404).json({
         message: " Event Not Found!",
         success: false
       })
     }
 
+    const data = result.data;
+
+    const event = await EventModel.findById(data.eventId).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt");
+
+    if (!event) {
+      return res.status(404).json({
+        message: "Event does not exist!",
+        success: false
+      })
+    }
+
     const username = await UserModel.findById(event.createdBy).select("username");
-    console.log(username);
+
+    // get registered status of user
+    let registered = false;
+
+    if (req.user) {
+      const isRegistered = await RegistrationModel.exists({ userId: req.user.userId, eventId: data.eventId });
+      if (isRegistered) registered = true;
+    }
 
     const eventData = {
       ...event.toObject(),
-      createdBy: username?.username
+      createdBy: username?.username,
+      registered: registered
     }
+
+    console.log(eventData);
 
     res.json({
       message: "Event Fetched Sucessfully!",

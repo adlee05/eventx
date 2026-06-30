@@ -1,5 +1,6 @@
 import express from "express";
 import authenticate from "../middleware/authenticate.js";
+import { optionalAuth } from "../middleware/optionalAuth.js";
 import { EventModel } from "../models/event.js";
 import {
   addEvent,
@@ -12,7 +13,7 @@ import {
 const router = express.Router();
 
 router.get("/allEvents", getAllEvents);
-router.get("/:id", eventById);
+router.get("/:id", optionalAuth, eventById);
 
 router.post("/register", authenticate, register);
 router.post("/addEvent", authenticate, addEvent);
