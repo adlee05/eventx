@@ -12,7 +12,7 @@ export interface AuthContextType {
     username: string,
     firstname: string,
     lastname: string,
-    bio: string
+    bio: string,
   }
 }
 

@@ -12,4 +12,5 @@ export interface EventType {
   category: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
+  registered: boolean;
 }
