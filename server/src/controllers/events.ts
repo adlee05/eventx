@@ -2,11 +2,10 @@ import { Request, Response } from "express";
 import { EventModel } from "../models/event.js";
 import { UserModel } from "../models/user.js";
 import { formDataShape } from "../schemas/event.schema.js";
-import * as z from "zod";
-import mongoose from "mongoose";
 import { RegistrationModel } from "../models/registrations.js";
 import { MongoServerError } from "mongodb";
 import { registrationSchema } from "../schemas/event.registration.js";
+import { success } from "zod";
 
 // add a new event
 async function addEvent(req: Request, res: Response) {
@@ -88,7 +87,7 @@ async function eventById(req: Request, res: Response) {
 
     const { id } = req.params;
 
-    const event = await EventModel.findById(id);
+    const event = await EventModel.findById(id).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt");
 
     if (!event) {
       return res.status(404).json({
@@ -97,14 +96,23 @@ async function eventById(req: Request, res: Response) {
       })
     }
 
+    const username = await UserModel.findById(event.createdBy).select("username");
+    console.log(username);
+
+    const eventData = {
+      ...event.toObject(),
+      createdBy: username?.username
+    }
+
     res.json({
       message: "Event Fetched Sucessfully!",
-      data: event,
+      data: eventData,
       success: true
     });
 
   } catch (error) {
     console.error("Error fetching Event", error);
+
     res.status(500).json({
       message: "Failed to fetch Event!",
       success: false
@@ -159,4 +167,35 @@ async function register(req: Request, res: Response) {
   }
 }
 
-export { addEvent, getAllEvents, eventById, register };
+async function deleteRegistration(req: Request, res: Response) {
+  // validate data
+  const result = registrationSchema.safeParse(req.body);
+
+  if (!result.success) {
+    return res.status(400).json({
+      message: "Invalid data shape, check eventId " + result.error.message,
+      success: false
+    })
+  }
+  const data = result.data;
+
+  // check if there's any registration
+  try {
+    await RegistrationModel.deleteOne({ userId: req.user.userId, eventId: data.eventId });
+
+    return res.status(200).json({
+      message: "User is now unregistered from the event.",
+      success: true
+    })
+
+  } catch (e) {
+    console.error(e);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false
+    });
+  }
+}
+
+export { addEvent, getAllEvents, eventById, register, deleteRegistration };
