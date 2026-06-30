@@ -6,7 +6,7 @@ const formDataShape = z.object({
   location: z.string().trim().min(10).max(300),
   maxParticipants: z.coerce.number().int().min(1).max(100),
   imageUrl: z.string().min(0).max(300),
-  category: z.enum(["recreation", "tech", "art"]),
+  category: z.enum(["recreational", "tech", "art"]),
   startDate: z.coerce.date(),
   deadDate: z.coerce.date(),
 }).refine((d) => d.startDate > d.deadDate,

@@ -24,9 +24,15 @@ async function updateProfile(req: Request, res: Response) {
         message: "Empty fields, try better",
         success: false
       })
-
     }
-    console.log(inputs);
+
+    const usernameExists = await UserModel.exists({ username: inputs.username });
+    if (usernameExists) {
+      return res.status(409).json({
+        message: "Username must be unique",
+        success: false
+      })
+    }
 
     await UserModel.findByIdAndUpdate(
       userId,
