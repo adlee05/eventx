@@ -17,7 +17,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
   if (!token) {
     return res.status(401).json({
       success: false,
-      message: "Authentication token missing",
+      message: "Please sign in to continue.",
     });
   }
 

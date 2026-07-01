@@ -6,6 +6,10 @@ import { RegistrationModel } from "../models/registrations.js";
 import { MongoServerError } from "mongodb";
 import { registrationSchema } from "../schemas/event.registration.js";
 import { success } from "zod";
+import mongoose from "mongoose";
+
+// so that we don't need to pass session object to every db instruction
+mongoose.set('transactionAsyncLocalStorage', true);
 
 // add a new event
 async function addEvent(req: Request, res: Response) {
@@ -96,7 +100,7 @@ async function eventById(req: Request, res: Response) {
 
     const data = result.data;
 
-    const event = await EventModel.findById(data.eventId).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt");
+    const event = await EventModel.findById(data.eventId).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt registrationCount");
 
     if (!event) {
       return res.status(404).json({
@@ -153,21 +157,44 @@ async function register(req: Request, res: Response) {
   const data = result.data;
 
   try {
-    // check if user and event exist
-    const eventExists = await EventModel.exists({ _id: data.eventId });
-    if (!eventExists) return res.status(404).json({
-      success: false,
-      message: "Event does not exist",
-    })
+    let regCount;
 
-    const registration = new RegistrationModel({
-      userId: req.user.userId,
-      eventId: data.eventId
-    });
-    await registration.save();
+    await mongoose.connection.transaction(async () => {
+      // increment registrationCount atomically
+      const event = await EventModel.findOneAndUpdate({
+        _id: data.eventId,
+        $expr: { $lt: ["$registrationCount", "$maxParticipants"] }
+      }, {
+        $inc: { registrationCount: 1 }
+      }, {
+        new: true
+      });
+
+      if (!event) {
+        const exists = await EventModel.exists({ _id: data.eventId });
+
+        if (!exists) {
+          throw new Error("EVENT_NOT_FOUND");
+        }
+
+        throw new Error("EVENT_FULL");
+      }
+
+      regCount = event.registrationCount;
+
+      const registration = new RegistrationModel({
+        userId: req.user.userId,
+        eventId: data.eventId
+      });
+
+      await registration.save();
+    })
 
     return res.status(200).json({
       message: "successfully registered",
+      data: {
+        registrationCount: regCount,
+      },
       success: true
     });
   }
@@ -177,9 +204,19 @@ async function register(req: Request, res: Response) {
         message: "Already registered",
         success: false
       });
+    } else if (e instanceof Error && e.message === 'EVENT_NOT_FOUND') {
+      return res.status(404).json({
+        message: "Event not found",
+        success: false
+      })
+    } else if (e instanceof Error && e.message === 'EVENT_FULL') {
+      return res.status(409).json({
+        message: "Event is full",
+        success: false
+      })
     } else {
       return res.status(500).json({
-        message: "Internal Server Error",
+        message: "Internal Server Error, try again",
         success: false
       });
     }
