@@ -13,4 +13,6 @@ export interface EventType {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   registered: boolean;
+  registrationCount: number;
+  maxParticipants: number;
 }

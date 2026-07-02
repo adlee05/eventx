@@ -88,7 +88,8 @@ function EventPage() {
             if (!prev) return prev;
             return {
               ...prev,
-              registered: true
+              registered: true,
+              registrationCount: res.data.data.registrationCount
             }
           })
         }
@@ -114,7 +115,8 @@ function EventPage() {
             if (!prev) return prev;
             return {
               ...prev,
-              registered: false
+              registered: false,
+              registrationCount: res.data.data.registrationCount
             }
           })
         }
@@ -179,10 +181,38 @@ function EventPage() {
           </div>
         </div>
 
-        <Button className="md:w-auto w-full cursor-pointer" disabled={isSubmitting} onClick={handleRegister}>
-          {isSubmitting ? <Spinner /> : details.registered ? "Unregister" : "Register"}
-        </Button>
+        <div className="flex flex-col items-center gap-3">
+          <Button
+            className="w-full md:w-auto cursor-pointer"
+            disabled={isSubmitting}
+            onClick={handleRegister}
+          >
+            {isSubmitting ? <Spinner /> : details.registered ? "Unregister" : "Register"}
+          </Button>
 
+          <div className="w-full md:w-64">
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Seats</span>
+              <span>
+                {details.registrationCount} / {details.maxParticipants}
+              </span>
+            </div>
+
+            <div className="mt-1 h-2 w-full rounded-full bg-muted overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all duration-300"
+                style={{
+                  width: `${(details.registrationCount / details.maxParticipants) * 100
+                    }%`,
+                }}
+              />
+            </div>
+
+            <p className="mt-1 text-center text-xs text-muted-foreground">
+              {details.maxParticipants - details.registrationCount} seats left
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="grid md:grid-cols-[2fr_1fr] gap-10 mt-10">
