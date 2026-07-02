@@ -157,11 +157,9 @@ async function register(req: Request, res: Response) {
   const data = result.data;
 
   try {
-    let regCount;
-
-    await mongoose.connection.transaction(async () => {
+    const registrationCount = await mongoose.connection.transaction(async () => {
       // increment registrationCount atomically
-      const event = await EventModel.findOneAndUpdate({
+      const updatedEvent = await EventModel.findOneAndUpdate({
         _id: data.eventId,
         $expr: { $lt: ["$registrationCount", "$maxParticipants"] }
       }, {
@@ -170,7 +168,7 @@ async function register(req: Request, res: Response) {
         new: true
       });
 
-      if (!event) {
+      if (!updatedEvent) {
         const exists = await EventModel.exists({ _id: data.eventId });
 
         if (!exists) {
@@ -180,20 +178,20 @@ async function register(req: Request, res: Response) {
         throw new Error("EVENT_FULL");
       }
 
-      regCount = event.registrationCount;
-
       const registration = new RegistrationModel({
         userId: req.user.userId,
         eventId: data.eventId
       });
 
       await registration.save();
+
+      return updatedEvent.registrationCount;
     })
 
     return res.status(200).json({
       message: "successfully registered",
       data: {
-        registrationCount: regCount,
+        registrationCount: registrationCount,
       },
       success: true
     });
@@ -233,19 +231,60 @@ async function deleteRegistration(req: Request, res: Response) {
       success: false
     })
   }
+
   const data = result.data;
 
   // check if there's any registration
   try {
-    await RegistrationModel.deleteOne({ userId: req.user.userId, eventId: data.eventId });
+    const registrationCount = await mongoose.connection.transaction(async () => {
+      const registrationExists = await RegistrationModel.deleteOne({
+        userId: req.user.userId,
+        eventId: data.eventId
+      });
 
-    return res.status(200).json({
-      message: "User is now unregistered from the event.",
-      success: true
+      if (!registrationExists.deletedCount) {
+        throw new Error("NO_REGISTRATION");
+      }
+
+      const updatedEvent = await EventModel.findOneAndUpdate({
+        _id: data.eventId,
+        registrationCount: { $gt: 0 }
+      }, {
+        $inc: { registrationCount: -1 }
+      }, {
+        new: true
+      })
+
+      if (!updatedEvent) {
+        throw new Error("UNABLE_TO_UPDATE");
+      }
+
+      return updatedEvent.registrationCount;
     })
 
+    return res.status(200).json({
+      message: "Unregistered successfully",
+      data: {
+        registrationCount: registrationCount
+      },
+      success: true
+    })
   } catch (e) {
     console.error(e);
+
+    if (e instanceof Error && e.message == "NO_REGISTRATION") {
+      return res.status(200).json({
+        message: "User was not registered",
+        success: true
+      })
+    }
+
+    if (e instanceof Error && e.message == "UNABLE_TO_UPDATE") {
+      return res.status(500).json({
+        message: "Unable to update registration",
+        success: false
+      })
+    }
 
     return res.status(500).json({
       message: "Internal Server Error",
