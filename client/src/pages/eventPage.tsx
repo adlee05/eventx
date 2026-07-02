@@ -10,6 +10,9 @@ import { Calendar, Clock, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
 import { getDateTime } from "@/utils/getDateTime";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 function EventPage() {
   // badges
@@ -149,106 +152,163 @@ function EventPage() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto my-10 px-5 md:px-0">
+    <div className="max-w-6xl mx-auto px-5 py-10">
+      {/* Hero Image */}
       <img
         src={`${imgUrl}?w=1200`}
-        alt="Event Image"
-        className="w-full h-[350px] md:h-[420px] object-cover rounded-xl"
+        alt="Event"
+        className="w-full h-[260px] md:h-[360px] rounded-2xl object-cover"
       />
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-6">
-
+      <div className="grid md:grid-cols-[2fr_1fr] gap-10 mt-8">
+        {/* Left Section */}
         <div>
           <Badge className={categoryColors[details.category]}>
             {details.category}
           </Badge>
-          <h1 className="text-3xl md:text-4xl font-semibold">
+
+          <h1 className="text-4xl md:text-5xl font-bold mt-3">
             {details.title}
           </h1>
 
-          <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-            <IconClockHour3 size={18} />
-            <span>•</span>
-            <span>{details.location}</span>
+          <div className="flex flex-wrap items-center gap-6 mt-5 text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <MapPin size={18} />
+              <span>{details.location}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <IconClockHour3 size={18} />
+              <span>{getDateTime(details.startDate)}</span>
+            </div>
           </div>
-          <div className="created-by flex items-center">
-            <p className="font-semibold">Event by</p>
+
+          <div className="mt-5 flex items-center gap-2">
+            <span className="text-muted-foreground">Hosted by</span>
+
             <Link to={userLink}>
-              <Button variant="link" className="cursor-pointer">
-                {details?.createdBy}
+              <Button
+                variant="link"
+                className="px-0 h-auto text-base font-semibold cursor-pointer"
+              >
+                {details.createdBy}
               </Button>
             </Link>
           </div>
-        </div>
 
-        <div className="flex flex-col items-center gap-3">
-          <Button
-            className="w-full md:w-auto cursor-pointer"
-            disabled={isSubmitting}
-            onClick={handleRegister}
-          >
-            {isSubmitting ? <Spinner /> : details.registered ? "Unregister" : "Register"}
-          </Button>
+          <Separator className="my-8" />
 
-          <div className="w-full md:w-64">
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Seats</span>
-              <span>
-                {details.registrationCount} / {details.maxParticipants}
-              </span>
-            </div>
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">
+              About this event
+            </h2>
 
-            <div className="mt-1 h-2 w-full rounded-full bg-muted overflow-hidden">
-              <div
-                className="h-full bg-primary transition-all duration-300"
-                style={{
-                  width: `${(details.registrationCount / details.maxParticipants) * 100
-                    }%`,
-                }}
-              />
-            </div>
-
-            <p className="mt-1 text-center text-xs text-muted-foreground">
-              {details.maxParticipants - details.registrationCount} seats left
+            <p className="leading-8 text-muted-foreground whitespace-pre-line">
+              {details.description}
             </p>
           </div>
         </div>
-      </div>
 
-      <div className="grid md:grid-cols-[2fr_1fr] gap-10 mt-10">
+        {/* Right Card */}
         <div>
-          <h2 className="text-2xl font-semibold mb-3">
-            Details
-          </h2>
+          <Card className="sticky top-24 rounded-2xl">
+            <CardContent className="p-6 space-y-6">
 
-          <p className="text-muted-foreground leading-relaxed">
-            {details.description}
-          </p>
+              <Button
+                className="w-full cursor-pointer"
+                disabled={isSubmitting}
+                onClick={handleRegister}
+              >
+                {isSubmitting ? (
+                  <Spinner />
+                ) : details.registered ? (
+                  "Unregister"
+                ) : (
+                  "Register"
+                )}
+              </Button>
+
+              <Separator />
+
+              {/* Seats */}
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm font-medium">
+                  <span>Seats</span>
+
+                  <span>
+                    {details.registrationCount} / {details.maxParticipants}
+                  </span>
+                </div>
+
+                <Progress
+                  value={
+                    (details.registrationCount /
+                      details.maxParticipants) *
+                    100
+                  }
+                />
+
+                <p className="text-center text-sm text-muted-foreground">
+                  {details.maxParticipants -
+                    details.registrationCount}{" "}
+                  seats remaining
+                </p>
+              </div>
+
+              <Separator />
+
+              {/* Event Details */}
+
+              <div className="space-y-5">
+
+                <div className="flex gap-4">
+                  <Calendar className="w-5 h-5 mt-1 text-primary" />
+
+                  <div>
+                    <p className="font-medium">
+                      Starts
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {getDateTime(details.startDate)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <Clock className="w-5 h-5 mt-1 text-primary" />
+
+                  <div>
+                    <p className="font-medium">
+                      Registration closes
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {getDateTime(details.deadDate)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <MapPin className="w-5 h-5 mt-1 text-primary" />
+
+                  <div>
+                    <p className="font-medium">
+                      Venue
+                    </p>
+
+                    <p className="text-sm text-muted-foreground">
+                      {details.location}
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+
+            </CardContent>
+          </Card>
         </div>
-
-        <div className="p-6 border rounded-xl bg-card space-y-5 h-fit">
-
-          <div className="flex items-center gap-3 text-sm font-bold text-muted-foreground">
-            <Calendar className="w-4 h-4" />
-            <span>
-              {getDateTime(details.startDate)} onwards.
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 text-sm font-semibold">
-            <Clock className="w-4 h-4" />
-            <span>
-              {getDateTime(details.deadDate)} deadline.
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <MapPin className="w-4 h-4" />
-            <span>{details.location}</span>
-          </div>
-
-        </div>
-
       </div>
     </div>
   );
