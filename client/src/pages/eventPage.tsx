@@ -147,6 +147,12 @@ function EventPage() {
     return <p className="text-center">Event not found!</p>
   }
 
+  // check if its appropriate to register
+  const now = new Date();
+  const hasExpired =
+    new Date(details.startDate) < now ||
+    new Date(details.deadDate) < now;
+
   const imgUrl = (
     details.imageUrl == "" ? "https://images.pexels.com/photos/17415163/pexels-photo-17415163.jpeg" : details.imageUrl
   );
@@ -213,53 +219,63 @@ function EventPage() {
         <div>
           <Card className="sticky top-24 rounded-2xl">
             <CardContent className="p-6 space-y-6">
+              {hasExpired ?
+                <p className="text-red-600 font-semibold">
+                  You can no longer participate in this event.
+                </p> :
+                <div className="flex flex-col gap-7">
 
-              <Button
-                className="w-full cursor-pointer"
-                disabled={isSubmitting}
-                onClick={handleRegister}
-              >
-                {isSubmitting ? (
-                  <Spinner />
-                ) : details.registered ? (
-                  "Unregister"
-                ) : (
-                  "Register"
-                )}
-              </Button>
+                  <Button
+                    className="w-full cursor-pointer"
+                    disabled={isSubmitting ||
+                      (!details.registered && details.registrationCount == details.maxParticipants)
+                    }
+                    onClick={handleRegister}
+                  >
+                    {isSubmitting ? (
+                      <Spinner />
+                    ) : details.registered ? (
+                      "Unregister"
+                    ) : (
+                      "Register"
+                    )}
+                  </Button>
 
-              <Separator />
+                  <Separator />
 
-              {/* Seats */}
+                  {/* Seats */}
 
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm font-medium">
-                  <span>Seats</span>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm font-medium">
+                      <span>Seats</span>
 
-                  <span>
-                    {details.registrationCount} / {details.maxParticipants}
-                  </span>
+                      <span>
+                        {details.registrationCount} / {details.maxParticipants}
+                      </span>
+                    </div>
+
+                    <Progress
+                      value={
+                        (details.registrationCount /
+                          details.maxParticipants) *
+                        100
+                      }
+                    />
+
+                    <p className="text-center text-sm text-muted-foreground">
+                      {details.maxParticipants -
+                        details.registrationCount}{" "}
+                      seats remaining
+                    </p>
+                  </div>
+
+                  <Separator />
+
+
                 </div>
 
-                <Progress
-                  value={
-                    (details.registrationCount /
-                      details.maxParticipants) *
-                    100
-                  }
-                />
-
-                <p className="text-center text-sm text-muted-foreground">
-                  {details.maxParticipants -
-                    details.registrationCount}{" "}
-                  seats remaining
-                </p>
-              </div>
-
-              <Separator />
-
+              }
               {/* Event Details */}
-
               <div className="space-y-5">
 
                 <div className="flex gap-4">

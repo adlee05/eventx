@@ -66,7 +66,9 @@ async function addEvent(req: Request, res: Response) {
 // get all available events
 async function getAllEvents(req: Request, res: Response) {
   try {
-    const allEvents = await EventModel.find()
+    const allEvents = await EventModel.find({
+      deadDate: { $gt: new Date() }
+    })
       .select("title description category imageUrl location startDate _id")
       .sort({ startDate: -1 });
 
@@ -100,7 +102,7 @@ async function eventById(req: Request, res: Response) {
 
     const data = result.data;
 
-    const event = await EventModel.findById(data.eventId).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt registrationCount");
+    const event = await EventModel.findById(data.eventId).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt registrationCount maxParticipants");
 
     if (!event) {
       return res.status(404).json({
@@ -157,6 +159,24 @@ async function register(req: Request, res: Response) {
   const data = result.data;
 
   try {
+    const now = new Date();
+
+    const eventDates = await EventModel.findById(data.eventId).select("startDate deadDate");
+
+    if (!eventDates) {
+      return res.status(404).json({
+        message: "Event not found",
+        success: false
+      })
+    }
+
+    if (eventDates.startDate < now || eventDates.deadDate < now) {
+      return res.status(400).json({
+        message: "You can no longer register for this event.",
+        success: false
+      })
+    }
+
     const registrationCount = await mongoose.connection.transaction(async () => {
       // increment registrationCount atomically
       const updatedEvent = await EventModel.findOneAndUpdate({
