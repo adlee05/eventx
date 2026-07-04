@@ -1,6 +1,6 @@
 import { Button } from "../../components/ui/button";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 
 const menuOptions = [

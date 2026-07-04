@@ -1,7 +1,7 @@
 import { IconClockHour3 } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import type { EventProps } from "@/types/event-props";
-import { Bookmark, ChevronRight, MapPin } from "lucide-react";
+import { ChevronRight, MapPin } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Badge } from "@/components/ui/badge"
 import { getDateTime } from '@/utils/getDateTime';
@@ -22,28 +22,13 @@ export function EventCard(props: EventProps) {
     <div className="group w-full max-w-sm">
 
       <div
-        className="relative h-80 sm:h-96 rounded-xl shadow-xl w-full flex flex-col justify-between p-4 bg-cover bg-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]"
+        className="relative h-80 sm:h-96 rounded-xl shadow-xl w-full flex flex-col justify-end p-4 bg-cover bg-center overflow-hidden transition-transform duration-300 group-hover:scale-[1.02]"
         style={{
           backgroundImage: `url(${imgUrl}?w=800)`
         }}
       >
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition group-hover:from-black/95" />
-
-        {/* Date + Location */}
-        <div className="relative z-10 flex flex-col gap-2 text-white md:text-sm text-xs">
-
-          <div className="flex items-center gap-2">
-            <IconClockHour3 size={16} />
-            {getDateTime(props.startDate)}
-          </div>
-
-          <div className="flex items-center gap-2 text-gray-200">
-            <MapPin size={16} />
-            {props.location}
-          </div>
-
-        </div>
 
         <div className="relative z-10">
           <Badge className={categoryColors[props.category]}>
@@ -57,16 +42,27 @@ export function EventCard(props: EventProps) {
             {props.description}
           </p>
 
-          <div className="mt-4 flex items-center justify-between">
+          <div className="gap-4 mt-4 flex items-center justify-between">
+            <div className="relative min-w-0 z-10 flex flex-col gap-2 text-white md:text-sm text-xs">
 
-            <button className="text-white hover:text-yellow-300 transition">
-              <Bookmark size={18} />
-            </button>
+              <div className="flex items-center gap-2">
+                <IconClockHour3 size={16} />
+                {getDateTime(props.startDate)}
+              </div>
+
+              <div className="flex items-center gap-2 text-gray-200 min-w-0">
+                <MapPin size={16} className='shrink-0' />
+                <p className='truncate'>
+                  {props.location}
+                </p>
+              </div>
+
+            </div>
 
             <Button
               asChild
               size="sm"
-              className="bg-white text-black hover:bg-white/90"
+              className="bg-white shrink-0 text-black hover:bg-white/90"
             >
               <Link to={linkTo} className="flex items-center gap-1">
                 More <ChevronRight size={16} />

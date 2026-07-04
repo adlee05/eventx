@@ -47,7 +47,7 @@ export default function NavbarComp() {
           <div className="flex items-center">
             {AuthStatus ?
               <div className="flex items-center">
-                <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
+                <NavbarButton variant="secondary"><AvatarComp menuOpen={setIsMobileMenuOpen} /></NavbarButton>
                 <NavbarButton variant="secondary">
                   <Link to='/event/create'>
                     <Button variant="outline" className="cursor-pointer"><Plus /> Create Event</Button>
