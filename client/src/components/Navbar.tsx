@@ -38,7 +38,7 @@ export default function NavbarComp() {
   const location = useLocation();
 
   return (
-    <div className="relative w-full z-100">
+    <div className="relative w-full z-100 cursor-pointer">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
@@ -86,11 +86,13 @@ export default function NavbarComp() {
             <div className="flex w-full flex-col gap-4">
               {AuthStatus ?
                 <div className="flex flex-col gap-2">
-                  <NavbarButton variant="secondary"><AvatarComp /></NavbarButton>
-                  <Link to='/event/create'>
+                  <NavbarButton variant="secondary"><AvatarComp menuOpen={setIsMobileMenuOpen} /></NavbarButton>
+                  <Link to='/event/create' onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="outline"><Plus /> Create Event</Button>
                   </Link>
-                </div> : <Link to="/login"><NavbarButton variant="primary">Login</NavbarButton></Link>}
+                </div> : <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <NavbarButton variant="primary">Login</NavbarButton>
+                </Link>}
               {location.pathname != '/' && <NavbarButton variant="secondary"><ModeToggle /></NavbarButton>}
             </div>
           </MobileNavMenu>

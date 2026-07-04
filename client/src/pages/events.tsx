@@ -3,6 +3,7 @@ import { useEffect, useContext, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { NotifyContext } from "@/context/notifyContext";
 import { Filters } from "@/components/Filters";
+import { Spinner } from "@/components/ui/spinner";
 
 // types
 import type { EventProps } from "@/types/event-props";
@@ -42,7 +43,9 @@ function Events() {
   }, []);
 
   if (loading) {
-    return <h1>Loading.....</h1>;
+    return <div className="flex justify-center">
+      <Spinner className="size-10" />
+    </div>
   }
 
   return (

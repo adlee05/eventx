@@ -1,5 +1,5 @@
 import { Button } from "../../components/ui/button";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 
@@ -7,35 +7,26 @@ const menuOptions = [
   {
     id: 1,
     label: "Profile",
-    to: '/profile/'
-  },
-  {
-    id: 2,
-    label: "Saved Events",
-    to: '/profile/savedEvents'
+    to: '/profile/',
+    url: 'profile'
   },
   {
     id: 3,
     label: "Upcoming Events",
-    to: '/profile/upcomingEvents'
+    to: '/profile/upcomingEvents',
+    url: 'upcomingEvents'
   },
   {
     id: 4,
     label: "Past Events",
-    to: '/profile/pastEvents'
+    to: '/profile/pastEvents',
+    url: 'pastEvents'
   }
 ]
 
-// <Button variant="ghost" className="cursor-pointer">Details</Button>
-//         <Button variant="ghost">Saved Events</Button>
-//         <Button variant="ghost">Upcoming Events</Button>
-//         <Button>Attended Events</Button>
-
 function Profile() {
-  const [selected, setSelected] = useState(1);
-  const handleClick = (id: number) => {
-    setSelected(id);
-  };
+  const location = useLocation();
+
   const { userDetails } = useContext(AuthContext);
 
   return (<>
@@ -49,10 +40,9 @@ function Profile() {
         <div className="flex gap-4 min-w-max px-4 justify-center">
           {menuOptions.map((elem) => (
             <Button
-              variant={selected === elem.id ? "default" : "ghost"}
+              variant={location.pathname === elem.to ? "default" : "ghost"}
               asChild
               key={elem.id}
-              onClick={() => handleClick(elem.id)}
             >
               <Link to={elem.to}>{elem.label}</Link>
             </Button>

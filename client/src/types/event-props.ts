@@ -1,4 +1,4 @@
-type EventProps = {
+export interface EventProps {
   category: string,
   _id: string,
   startDate: Date,
@@ -8,4 +8,3 @@ type EventProps = {
   imageUrl: string,
 };
 
-export type { EventProps };

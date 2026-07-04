@@ -3,6 +3,7 @@ import { NotifyContext } from "@/context/notifyContext";
 import { useState, useContext, useEffect } from "react";
 import { EventCard } from "@/components/EventCard";
 import { type profileEvents } from "@/types/profileEvents";
+import { Spinner } from "@/components/ui/spinner";
 
 function UpcomingEvents() {
   // notify context
@@ -15,6 +16,7 @@ function UpcomingEvents() {
   const [, showNotification] = notifyContext;
 
   const [data, setData] = useState<profileEvents[] | undefined>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getUpcoming = async () => {
@@ -34,15 +36,23 @@ function UpcomingEvents() {
             type: "failure"
           });
         }
+      } finally {
+        setLoading(false);
       }
     }
 
     getUpcoming();
   }, []);
 
+  if (loading) {
+    return <div className="flex justify-center">
+      <Spinner className="size-10" />
+    </div>
+  }
+
   return <>
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
-      {!data ? <p>No upcoming events</p> : data?.map((event, i) => (
+      {data?.length == 0 ? <p className="text-center">No upcoming events</p> : data?.map((event, i) => (
         <EventCard
           key={i}
           title={event.eventId.title}

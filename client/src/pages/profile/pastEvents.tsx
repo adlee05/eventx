@@ -1,22 +1,69 @@
+import axios, { AxiosError } from "axios";
+import { NotifyContext } from "@/context/notifyContext";
+import { useState, useContext, useEffect } from "react";
 import { EventCard } from "@/components/EventCard";
+import { type profileEvents } from "@/types/profileEvents";
+import { Spinner } from "@/components/ui/spinner";
 
-function PastEvents() {
+export default function PastEvents() {
+  // notify context
+  const notifyContext = useContext(NotifyContext);
+
+  if (!notifyContext) {
+    throw new Error("Cannot use context outside its scope.");
+  }
+
+  const [, showNotification] = notifyContext;
+
+  const [data, setData] = useState<profileEvents[] | undefined>();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUpcoming = async () => {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_SERVER_URI}/profile/past`, { withCredentials: true });
+
+        if (res.data.data) {
+          setData(res.data.data);
+        }
+      } catch (e) {
+        console.error(e);
+
+        if (e instanceof AxiosError) {
+          showNotification({
+            title: "Error Fetching Event Details",
+            desc: e.response?.data?.message,
+            type: "failure"
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getUpcoming();
+  }, []);
+
+  if (loading) {
+    return <div className="flex justify-center">
+      <Spinner className="size-10" />
+    </div>
+  }
+
   return <>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-14 gap-x-12">
-      {Array.from({ length: 10 }).map((_, i) => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
+      {data?.length == 0 ? <p>You haven't registered for any events</p> : data?.map((event, i) => (
         <EventCard
           key={i}
-          _id={124}
-          date="Mon, 25th Aug"
-          duration="4hrs"
-          location="Amaravati"
-          title="Getting Started with Arch"
-          description="Deep dive into linux and more!"
-          imageUrl=""
+          title={event.eventId.title}
+          _id={event.eventId._id}
+          description={event.eventId.description}
+          location={event.eventId.location}
+          category={event.eventId.category}
+          imageUrl={event.eventId.imageUrl}
+          startDate={event.eventId.startDate}
         />
       ))}
     </div>
   </>;
 }
-
-export default PastEvents;
