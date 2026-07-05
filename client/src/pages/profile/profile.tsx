@@ -11,16 +11,22 @@ const menuOptions = [
     url: 'profile'
   },
   {
-    id: 3,
+    id: 2,
     label: "Upcoming Events",
     to: '/profile/upcomingEvents',
     url: 'upcomingEvents'
   },
   {
-    id: 4,
+    id: 3,
     label: "Past Events",
     to: '/profile/pastEvents',
     url: 'pastEvents'
+  },
+  {
+    id: 4,
+    label: "My Events",
+    to: '/profile/myEvents',
+    url: 'myEvents'
   }
 ]
 

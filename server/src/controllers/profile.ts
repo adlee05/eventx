@@ -1,10 +1,70 @@
 import { Request, Response } from "express";
 import { UserModel } from "../models/user.js";
-import { success } from "zod";
+import { RegistrationModel } from "../models/registrations.js";
+import { EventModel } from "../models/event.js";
 
-function getUpcoming() { }
-function getPast() { }
-function getSaved() { }
+async function getUpcoming(req: Request, res: Response) {
+  try {
+    const registrations = await RegistrationModel
+      .find({
+        userId: req.user.userId,
+      })
+      .populate({
+        path: "eventId",
+        select: "title description category imageUrl location startDate _id",
+        match: {
+          startDate: { $gt: new Date() }
+        }
+      });
+
+    const upcomingEvents = registrations.filter((e) => e.eventId !== null);
+
+    return res.status(200).json({
+      message: "Events fetched successfully",
+      success: true,
+      data: upcomingEvents
+    })
+  } catch (e) {
+    console.error(e)
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false
+    })
+  }
+}
+
+async function getPast(req: Request, res: Response) {
+  try {
+    const registrations = await RegistrationModel
+      .find({
+        userId: req.user.userId,
+      })
+      .populate({
+        path: "eventId",
+        select: "title description category imageUrl location startDate _id",
+        match: {
+          startDate: { $lt: new Date() }
+        }
+      });
+
+    const pastEvents = registrations.filter((e) => e.eventId !== null);
+
+    return res.status(200).json({
+      message: "Events fetched successfully",
+      success: true,
+      data: pastEvents
+    })
+  } catch (e) {
+    console.error(e)
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false
+    })
+  }
+}
+
 async function updateProfile(req: Request, res: Response) {
   try {
     const userId = req.user.userId;
@@ -52,4 +112,27 @@ async function updateProfile(req: Request, res: Response) {
   }
 }
 
-export { getUpcoming, getPast, getSaved, updateProfile }
+async function getMyEvents(req: Request, res: Response) {
+  try {
+    const myEvents = await EventModel
+      .find({ createdBy: req.user.userId })
+      .select("title description category imageUrl location startDate _id")
+      .sort({ startDate: -1 })
+
+    return res.status(200).json({
+      message: "Events fetched successfully",
+      success: true,
+      data: myEvents
+    })
+
+  } catch (e) {
+    console.error(e);
+
+    res.status(500).json({
+      message: "Failed to fetch Event!",
+      success: false
+    });
+  }
+}
+
+export { getUpcoming, getPast, getMyEvents, updateProfile }

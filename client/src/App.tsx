@@ -16,6 +16,7 @@ import EventPage from "@/pages/eventPage.js"
 import Notify from "@/components/notification.jsx";
 import CreatePage from "@/pages/CreatePage.jsx"
 import UserPage from '@/pages/UserPage.js';
+import MyEvents from './pages/profile/myEvents.js';
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
               <Route path="savedEvents" element={<SavedEvents />} />
               <Route path="upcomingEvents" element={<UpcomingEvents />} />
               <Route path="pastEvents" element={<PastEvents />} />
+              <Route path="myEvents" element={<MyEvents />} />
             </Route>
           </Route>
         </Route>
