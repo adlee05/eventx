@@ -12,6 +12,7 @@ export function EventCard(props: EventProps) {
     tech: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 mb-1",
     recreational: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300 mb-1",
     art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-1",
+    archived: "bg-gray-50 text-purple-700 dark:bg-gray-950 dark:text-purple-300 mb-1",
   }
 
   const imgUrl = (
@@ -28,12 +29,14 @@ export function EventCard(props: EventProps) {
         }}
       >
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition group-hover:from-black/95" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent transition group-hover:from-black/95" />
 
         <div className="relative z-10">
-          <Badge className={categoryColors[props.category]}>
-            {props.category}
-          </Badge>
+          <div className='flex gap-4'>
+            <Badge className={categoryColors[props.category]}>
+              {props.category}
+            </Badge>
+          </div>
           <h1 className="font-semibold text-sm md:text-lg text-white leading-snug drop-shadow-md">
             {props.title}
           </h1>
