@@ -313,4 +313,39 @@ async function deleteRegistration(req: Request, res: Response) {
   }
 }
 
-export { addEvent, getAllEvents, eventById, register, deleteRegistration };
+async function archiveEvent(req: Request, res: Response) {
+  const { id } = req.params;
+  console.log(id);
+
+  try {
+    const event = await EventModel.findOne({
+      _id: req.params.id,
+      createdBy: req.user.userId,
+    });
+
+    if (!event) {
+      return res.status(404).json({
+        message: "Event not found",
+        success: false
+      });
+    }
+
+    event.archived = !event.archived;
+
+    await event.save();
+
+    return res.status(200).json({
+      message: "Archive action successful",
+      success: true
+    })
+  } catch (e) {
+    console.error(e);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false
+    })
+  }
+}
+
+export { addEvent, getAllEvents, eventById, register, deleteRegistration, archiveEvent };

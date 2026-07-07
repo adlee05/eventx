@@ -8,11 +8,11 @@ import { IconClockHour3 } from '@tabler/icons-react';
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge"
-import { Link } from "react-router-dom"
 import { getDateTime } from "@/utils/getDateTime";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { EventSettings } from "@/components/eventSettings";
 
 function EventPage() {
   // badges
@@ -20,6 +20,7 @@ function EventPage() {
     tech: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 mb-3",
     recreational: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300 mb-3",
     art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-3",
+    archived: "bg-red-100 text-red-700 dark:bg-white dark:text-red-700 mb-3",
   }
 
   const notifyContext = useContext(NotifyContext);
@@ -32,10 +33,9 @@ function EventPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // event details store
-  const [details, setDetails] = useState<EventType | null>(null);
+  const [details, setDetails] = useState<EventType | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const userLink = `/users/${details?.createdBy}`;
   // get event id
   const { id } = useParams();
 
@@ -169,9 +169,17 @@ function EventPage() {
       <div className="grid md:grid-cols-[2fr_1fr] gap-10 mt-8">
         {/* Left Section */}
         <div>
-          <Badge className={categoryColors[details.category]}>
-            {details.category}
-          </Badge>
+          <div className="flex gap-4">
+            <Badge className={categoryColors[details.category]}>
+              {details.category}
+            </Badge>
+
+            {details.archived ?
+              <Badge className={categoryColors["archived"]}>
+                archived
+              </Badge> : ""
+            }
+          </div>
 
           <h1 className="text-4xl md:text-5xl font-bold mt-3">
             {details.title}
@@ -192,14 +200,12 @@ function EventPage() {
           <div className="mt-5 flex items-center gap-2">
             <span className="text-muted-foreground">Hosted by</span>
 
-            <Link to={userLink}>
-              <Button
-                variant="link"
-                className="px-0 h-auto text-base font-semibold cursor-pointer"
-              >
-                {details.createdBy}
-              </Button>
-            </Link>
+            <Button
+              variant="link"
+              className="px-0 h-auto text-base font-semibold"
+            >
+              {details.createdBy}
+            </Button>
           </div>
 
           <Separator className="my-8" />
@@ -216,7 +222,8 @@ function EventPage() {
         </div>
 
         {/* Right Card */}
-        <div>
+        <div className="flex flex-col gap-4">
+          <EventSettings isArchived={details.archived} eventId={id} setDetails={setDetails} />
           <Card className="sticky top-24 rounded-2xl">
             <CardContent className="p-6 space-y-6">
               {hasExpired ?
@@ -321,7 +328,6 @@ function EventPage() {
                 </div>
 
               </div>
-
             </CardContent>
           </Card>
         </div>

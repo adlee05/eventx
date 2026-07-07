@@ -3,7 +3,6 @@ import {
   EditIcon,
   FileUser
 } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -12,24 +11,93 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export function EventSettings() {
+import axios, { AxiosError } from "axios"
+import { NotifyContext } from "@/context/notifyContext"
+import { useContext, type SetStateAction } from "react";
+import type { EventType } from "@/types/event-details"
+
+interface propsType {
+  isArchived: boolean,
+  eventId: string | undefined,
+  setDetails: React.Dispatch<SetStateAction<EventType | undefined>>,
+};
+
+export function EventSettings({ isArchived, eventId, setDetails }: propsType) {
+
+  const notifyContext = useContext(NotifyContext);
+  if (!notifyContext) {
+    throw new Error("Cannot use context outside its scope.");
+  }
+  const [, showNotification] = notifyContext;
+
+  const handleEditing = () => {
+  }
+
+  const handleArchive = async () => {
+    try {
+      const res = await axios.patch(`${import.meta.env.VITE_SERVER_URI}/event/${eventId}/archive`, {}, {
+        withCredentials: true
+      });
+
+      if (res.data.success) {
+        const titleText = !isArchived ? "Event has been archived" : "Event has been Unarchived";
+
+        showNotification({
+          title: titleText,
+          desc: res.data.message,
+          type: "success"
+        })
+
+        setDetails((prev) => {
+          if (!prev) return prev;
+
+          return {
+            ...prev,
+            archived: !prev?.archived
+          }
+
+        })
+      } else {
+        showNotification({
+          title: "Unable to archive event",
+          desc: res.data.message,
+          type: "failure"
+        })
+      }
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        showNotification({
+          title: "Unable to archive event",
+          desc: e.response?.data?.message,
+          type: "failure"
+        });
+      }
+
+      console.error(e);
+    }
+  }
+
+  const viewRegistrations = () => {
+
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">Event Settings</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEditing}>
           <EditIcon />
           Edit Event Details
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleArchive}>
           <Archive />
-          Archive Event
+          {isArchived ? "Unarchive" : "Archive"}
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={viewRegistrations}>
           <FileUser />
-          View Registered Users
+          View Registrations
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -11,7 +11,8 @@ const EventSchema = new Schema(
     maxParticipants: { type: Number, default: 100 },
     deadDate: { type: Date, required: true },
     category: { type: String, enum: ["recreational", "tech", "art"], default: "recreational" },
-    registrationCount: { type: Number, default: 0 }
+    registrationCount: { type: Number, default: 0 },
+    archived: { type: Boolean, default: false }
   },
   { timestamps: true }
 );
