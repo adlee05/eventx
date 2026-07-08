@@ -232,9 +232,9 @@ function EventPage() {
           }
           <Card className="sticky top-24 rounded-2xl">
             <CardContent className="p-6 space-y-6">
-              {hasExpired ?
+              {hasExpired || details.archived ?
                 <p className="text-red-600 font-semibold">
-                  You can no longer participate in this event.
+                  Registrations are closed for this event
                 </p> :
                 <div className="flex flex-col gap-7">
 

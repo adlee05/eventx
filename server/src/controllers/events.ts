@@ -67,7 +67,8 @@ async function addEvent(req: Request, res: Response) {
 async function getAllEvents(req: Request, res: Response) {
   try {
     const allEvents = await EventModel.find({
-      deadDate: { $gt: new Date() }
+      deadDate: { $gt: new Date() },
+      archived: false
     })
       .select("title description category imageUrl location startDate _id")
       .sort({ startDate: -1 });
@@ -102,9 +103,16 @@ async function eventById(req: Request, res: Response) {
 
     const data = result.data;
 
-    const event = await EventModel.findById(data.eventId).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt registrationCount maxParticipants");
+    const event = await EventModel.findById(data.eventId).select("_id title description category startDate deadDate location imageUrl createdBy createdAt updatedAt registrationCount maxParticipants archived");
 
     if (!event) {
+      return res.status(404).json({
+        message: "Event does not exist!",
+        success: false
+      })
+    }
+
+    if (event.createdBy.toString() !== req.user.userId) {
       return res.status(404).json({
         message: "Event does not exist!",
         success: false
@@ -181,7 +189,8 @@ async function register(req: Request, res: Response) {
       // increment registrationCount atomically
       const updatedEvent = await EventModel.findOneAndUpdate({
         _id: data.eventId,
-        $expr: { $lt: ["$registrationCount", "$maxParticipants"] }
+        $expr: { $lt: ["$registrationCount", "$maxParticipants"] },
+        archived: false
       }, {
         $inc: { registrationCount: 1 }
       }, {
@@ -189,10 +198,14 @@ async function register(req: Request, res: Response) {
       });
 
       if (!updatedEvent) {
-        const exists = await EventModel.exists({ _id: data.eventId });
+        const event = await EventModel.findById(data.eventId);
 
-        if (!exists) {
+        if (!event) {
           throw new Error("EVENT_NOT_FOUND");
+        }
+
+        if (event.archived) {
+          throw new Error("ARCHIVED");
         }
 
         throw new Error("EVENT_FULL");
@@ -232,7 +245,13 @@ async function register(req: Request, res: Response) {
         message: "Event is full",
         success: false
       })
-    } else {
+    } else if (e instanceof Error && e.message === 'ARCHIVED') {
+      return res.status(400).json({
+        message: "Cannot register for the event",
+        success: false
+      })
+    }
+    else {
       return res.status(500).json({
         message: "Internal Server Error, try again",
         success: false
@@ -256,6 +275,18 @@ async function deleteRegistration(req: Request, res: Response) {
 
   // check if there's any registration
   try {
+    const dates = await EventModel.findById(data.eventId).select("startDate deadDate");
+
+    if (!dates) {
+      throw new Error("EVENT_NOT_FOUND");
+    }
+
+    const now = new Date();
+
+    if (dates.startDate < now || dates.deadDate < now) {
+      throw new Error("DATES");
+    }
+
     const registrationCount = await mongoose.connection.transaction(async () => {
       const registrationExists = await RegistrationModel.deleteOne({
         userId: req.user.userId,
@@ -268,7 +299,7 @@ async function deleteRegistration(req: Request, res: Response) {
 
       const updatedEvent = await EventModel.findOneAndUpdate({
         _id: data.eventId,
-        registrationCount: { $gt: 0 }
+        registrationCount: { $gt: 0 },
       }, {
         $inc: { registrationCount: -1 }
       }, {
@@ -276,6 +307,12 @@ async function deleteRegistration(req: Request, res: Response) {
       })
 
       if (!updatedEvent) {
+        const event = await EventModel.findById(data.eventId);
+
+        if (!event) {
+          throw new Error("EVENT_NOT_FOUND");
+        }
+
         throw new Error("UNABLE_TO_UPDATE");
       }
 
@@ -292,14 +329,28 @@ async function deleteRegistration(req: Request, res: Response) {
   } catch (e) {
     console.error(e);
 
-    if (e instanceof Error && e.message == "NO_REGISTRATION") {
+    if (e instanceof Error && e.message === "NO_REGISTRATION") {
       return res.status(200).json({
         message: "User was not registered",
         success: true
       })
     }
 
-    if (e instanceof Error && e.message == "UNABLE_TO_UPDATE") {
+    if (e instanceof Error && e.message === 'EVENT_NOT_FOUND') {
+      return res.status(404).json({
+        message: "Event not found",
+        success: false
+      })
+    }
+
+    if (e instanceof Error && e.message === "DATES") {
+      return res.status(200).json({
+        message: "Event has already started",
+        success: true
+      })
+    }
+
+    if (e instanceof Error && e.message === "UNABLE_TO_UPDATE") {
       return res.status(500).json({
         message: "Unable to update registration",
         success: false
