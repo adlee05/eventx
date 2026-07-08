@@ -232,7 +232,7 @@ function EventPage() {
           }
           <Card className="sticky top-24 rounded-2xl">
             <CardContent className="p-6 space-y-6">
-              {hasExpired || details.archived ?
+              {hasExpired || (details.archived && !details.registered) ?
                 <p className="text-red-600 font-semibold">
                   Registrations are closed for this event
                 </p> :
