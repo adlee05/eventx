@@ -13,5 +13,6 @@ export interface EventType {
   registered: boolean;
   registrationCount: number;
   maxParticipants: number;
-  archived: boolean
+  archived: boolean,
+  createdByUname: string
 }

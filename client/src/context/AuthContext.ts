@@ -13,6 +13,7 @@ export interface AuthContextType {
     firstname: string,
     lastname: string,
     bio: string,
+    userId: string
   }
 }
 

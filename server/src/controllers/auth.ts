@@ -190,6 +190,7 @@ async function me(req: Request, res: Response) {
       lastname: uname.lastname,
       bio: uname.bio,
       location: uname.location,
+      userId: req.user.userId
     }
   })
 }

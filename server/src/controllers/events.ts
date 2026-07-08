@@ -123,7 +123,7 @@ async function eventById(req: Request, res: Response) {
 
     const eventData = {
       ...event.toObject(),
-      createdBy: username?.username,
+      createdByUname: username?.username,
       registered: registered
     }
 

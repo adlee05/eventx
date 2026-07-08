@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { EventSettings } from "@/components/eventSettings";
+import { AuthContext } from "@/context/AuthContext";
 
 function EventPage() {
   // badges
@@ -22,6 +23,9 @@ function EventPage() {
     art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-3",
     archived: "bg-red-100 text-red-700 dark:bg-white dark:text-red-700 mb-3",
   }
+
+  // get user details 
+  const { userDetails } = useContext(AuthContext);
 
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
@@ -204,7 +208,7 @@ function EventPage() {
               variant="link"
               className="px-0 h-auto text-base font-semibold"
             >
-              {details.createdBy}
+              {details.createdByUname}
             </Button>
           </div>
 
@@ -223,7 +227,9 @@ function EventPage() {
 
         {/* Right Card */}
         <div className="flex flex-col gap-4">
-          <EventSettings isArchived={details.archived} eventId={id} setDetails={setDetails} />
+          {userDetails?.userId == details.createdBy ?
+            <EventSettings isArchived={details.archived} eventId={id} setDetails={setDetails} /> : ""
+          }
           <Card className="sticky top-24 rounded-2xl">
             <CardContent className="p-6 space-y-6">
               {hasExpired ?
