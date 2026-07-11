@@ -7,6 +7,7 @@ import { MongoServerError } from "mongodb";
 import { registrationSchema } from "../schemas/event.registration.js";
 import { success } from "zod";
 import mongoose from "mongoose";
+import { error } from "node:console";
 
 // so that we don't need to pass session object to every db instruction
 mongoose.set('transactionAsyncLocalStorage', true);
@@ -112,13 +113,6 @@ async function eventById(req: Request, res: Response) {
       })
     }
 
-    if (event.createdBy.toString() !== req.user.userId) {
-      return res.status(404).json({
-        message: "Event does not exist!",
-        success: false
-      })
-    }
-
     const username = await UserModel.findById(event.createdBy).select("username");
 
     // get registered status of user
@@ -134,8 +128,6 @@ async function eventById(req: Request, res: Response) {
       createdByUname: username?.username,
       registered: registered
     }
-
-    console.log(eventData);
 
     res.json({
       message: "Event Fetched Sucessfully!",
@@ -366,7 +358,6 @@ async function deleteRegistration(req: Request, res: Response) {
 
 async function archiveEvent(req: Request, res: Response) {
   const { id } = req.params;
-  console.log(id);
 
   try {
     const event = await EventModel.findOne({
@@ -399,4 +390,81 @@ async function archiveEvent(req: Request, res: Response) {
   }
 }
 
-export { addEvent, getAllEvents, eventById, register, deleteRegistration, archiveEvent };
+async function editEvent(req: Request, res: Response) {
+  const { id } = req.params;
+
+  const result = formDataShape.safeParse(req.body.data);
+
+  if (!result.success) {
+    return res.status(400).json({
+      message: result.error.message,
+      success: false
+    })
+  }
+  const data = result.data;
+
+  try {
+    const eventDetails = await EventModel.findById(id).select("registrationCount maxParticipants createdBy archived");
+
+    if (!eventDetails) {
+      return res.status(404).json({
+        message: "Event not found",
+        success: false
+      })
+    }
+
+    if (eventDetails.archived) {
+      return res.status(400).json({
+        message: "Cannot edit archived event",
+        success: false
+      })
+    }
+
+    if (eventDetails.createdBy.toString() !== req.user.userId) {
+      return res.status(403).json({
+        message: "Not authorized",
+        success: false
+      })
+    }
+
+    if (eventDetails.registrationCount > data.maxParticipants) {
+      return res.status(400).json({
+        message: `Max participants cannot be less than current registrations (${eventDetails.maxParticipants})`,
+        success: false
+      })
+    }
+
+    // imp validation
+    const now = new Date();
+
+    if (data.deadDate >= data.startDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Registration deadline must be before the event starts."
+      });
+    }
+
+    if (data.startDate <= now || data.deadDate <= now) {
+      return res.status(400).json({
+        message: "Both event start and registration deadline must be in the future.",
+        success: false
+      })
+    }
+
+    await EventModel.findByIdAndUpdate(id, data);
+
+    return res.status(200).json({
+      message: "Event details updated successfully",
+      success: true
+    })
+  } catch (e) {
+    console.error(e);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false
+    })
+  }
+}
+
+export { addEvent, getAllEvents, eventById, register, deleteRegistration, archiveEvent, editEvent };

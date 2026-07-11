@@ -81,8 +81,17 @@ function EditPage() {
     }
   }, [details, reset])
 
-  if (details && details.createdBy !== userDetails?.userId) {
+
+  if (!details) {
+    return <p className="text-center">Event not found!</p>
+  }
+
+  if (details.createdBy !== userDetails?.userId) {
     return <p className="text-center">Not Permitted!</p>
+  }
+
+  if (details.archived) {
+    return <p className="text-center">Cannot edit since event is archived!</p>
   }
 
   if (loading) {
@@ -90,11 +99,6 @@ function EditPage() {
       <Spinner />
     </div>;
   }
-
-  if (!details) {
-    return <p className="text-center">Event not found!</p>
-  }
-
   const onSubmit = async (data: formData) => {
     setIsDisabled(true);
 
@@ -112,7 +116,7 @@ function EditPage() {
     }
 
     try {
-      const result = await axios.patch(`${import.meta.env.VITE_SERVER_URI}`, cleanedData.data, { withCredentials: true });
+      const result = await axios.patch(`${import.meta.env.VITE_SERVER_URI}/event/${id}/edit`, cleanedData, { withCredentials: true });
 
       if (result.data.success) {
         showNotification({
@@ -145,8 +149,6 @@ function EditPage() {
           desc: String(e)
         })
       }
-    } finally {
-      setIsDisabled(false);
     }
   }
 
