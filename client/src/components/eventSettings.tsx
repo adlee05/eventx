@@ -15,6 +15,7 @@ import axios, { AxiosError } from "axios"
 import { NotifyContext } from "@/context/notifyContext"
 import { useContext, type SetStateAction } from "react";
 import type { EventType } from "@/types/event-details"
+import { Link } from "react-router-dom"
 
 interface propsType {
   isArchived: boolean,
@@ -89,7 +90,9 @@ export function EventSettings({ isArchived, eventId, setDetails }: propsType) {
       <DropdownMenuContent>
         <DropdownMenuItem onClick={handleEditing}>
           <EditIcon />
-          Edit Event Details
+          <Link to="edit">
+            Edit Event Details
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleArchive}>
           <Archive />

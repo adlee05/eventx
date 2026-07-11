@@ -28,9 +28,15 @@ type Props = {
   register: UseFormRegister<formData>;
   control: Control<formData>;
   errors: FieldErrors<formData>;
+  mode: string,
+  participants: number
 };
 
-function EventDetails({ register, control, errors }: Props) {
+function EventDetails({ register, control, errors, mode, participants }: Props) {
+
+  const maxParticipantsMsg = mode !== "edit" ?
+    "Atleast one member should be able to signup for the event" :
+    `Max participants cannot be less than the current registration count (${participants}).`;
 
   return (
     <>
@@ -111,8 +117,8 @@ function EventDetails({ register, control, errors }: Props) {
                 message: "Max 100 participants are supported"
               },
               min: {
-                value: 1,
-                message: "Atleast one member should be able to signup for the event"
+                value: participants,
+                message: maxParticipantsMsg
               },
               required: "This field is required"
             })}></Input>

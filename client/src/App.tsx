@@ -17,6 +17,7 @@ import Notify from "@/components/notification.jsx";
 import CreatePage from "@/pages/CreatePage.jsx"
 import UserPage from '@/pages/UserPage.js';
 import MyEvents from './pages/profile/myEvents.js';
+import EditPage from './pages/EditPage.js';
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/event">
               <Route path="create" element={<CreatePage />} />
+              <Route path=":id/edit" element={<EditPage />} />
             </Route>
             <Route path="/contact" element={<Contact />} />
             <Route path="/profile" element={<Profile />}>

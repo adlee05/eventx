@@ -77,7 +77,7 @@ function CreatePage() {
     <div className="max-w-4xl md:mx-auto mx-5">
       <FieldSet className="w-full bg-card p-10 rounded-xl">
         <span className="">
-          <EventDetails register={register} control={control} errors={errors} />
+          <EventDetails register={register} control={control} errors={errors} mode="create" participants={1} />
         </span>
         <span className="my-5">
           <EventTiming2 register={register} control={control} errors={errors} getValues={getValues} />
