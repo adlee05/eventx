@@ -43,6 +43,12 @@ function EventPage() {
   // get event id
   const { id } = useParams();
 
+  // registrations states
+  const [showRegistrations, setShowRegistrations] = useState(false);
+  const [participants, setParticipants] = useState([]);
+  const [participantsLoading, setParticipantsLoading] = useState(false);
+  const [participantsLoaded, setParticipantsLoaded] = useState(false);
+
   useEffect(() => {
     const eventDetail = async () => {
       try {
@@ -141,6 +147,43 @@ function EventPage() {
     }
   }
 
+  // to get registrations
+  const handleViewRegistrations = async () => {
+    const next = !showRegistrations;
+
+    setShowRegistrations(next);
+
+    if (next && !participantsLoaded) {
+      try {
+        setParticipantsLoading(true);
+
+        const res = await axios.get(
+          `${import.meta.env.VITE_SERVER_URI}/event/${id}/registrations`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (res.data.success) {
+          setParticipants(res.data.data);
+          setParticipantsLoaded(true);
+        }
+      } catch (e) {
+        console.error(e);
+
+        if (e instanceof AxiosError) {
+          showNotification({
+            title: "Unable to fetch registrations",
+            desc: e.response?.data?.message,
+            type: "failure",
+          });
+        }
+      } finally {
+        setParticipantsLoading(false);
+      }
+    }
+  };
+
   if (loading) {
     return <div className="mx-auto flex justify-center">
       <Spinner />
@@ -228,7 +271,7 @@ function EventPage() {
         {/* Right Card */}
         <div className="flex flex-col gap-4">
           {userDetails?.userId == details.createdBy ?
-            <EventSettings isArchived={details.archived} eventId={id} setDetails={setDetails} /> : ""
+            <EventSettings isArchived={details.archived} eventId={id} setDetails={setDetails} onViewRegistrations={handleViewRegistrations} /> : ""
           }
           <Card className="sticky top-24 rounded-2xl">
             <CardContent className="p-6 space-y-6">
@@ -338,6 +381,34 @@ function EventPage() {
           </Card>
         </div>
       </div>
+
+      {/* toggle registrations div */}
+      {showRegistrations && (
+        <div className="mt-12">
+          <Separator className="mb-8" />
+
+          <h2 className="text-3xl font-bold mb-6">
+            Registrations ({participants.length})
+          </h2>
+
+          {participantsLoading ? (
+            <Spinner />
+          ) : (
+            <div>
+              {participants.map((participant: any) => (
+                <Card key={participant._id} className="mb-3">
+                  <CardContent className="py-4">
+                    <p className="font-medium">{participant.username}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {participant.email}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

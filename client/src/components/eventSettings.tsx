@@ -21,9 +21,10 @@ interface propsType {
   isArchived: boolean,
   eventId: string | undefined,
   setDetails: React.Dispatch<SetStateAction<EventType | undefined>>,
+  onViewRegistrations: () => void;
 };
 
-export function EventSettings({ isArchived, eventId, setDetails }: propsType) {
+export function EventSettings({ isArchived, eventId, setDetails, onViewRegistrations }: propsType) {
 
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
@@ -78,10 +79,6 @@ export function EventSettings({ isArchived, eventId, setDetails }: propsType) {
     }
   }
 
-  const viewRegistrations = () => {
-
-  }
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -98,7 +95,7 @@ export function EventSettings({ isArchived, eventId, setDetails }: propsType) {
           <Archive />
           {isArchived ? "Unarchive" : "Archive"}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={viewRegistrations}>
+        <DropdownMenuItem onClick={onViewRegistrations}>
           <FileUser />
           View Registrations
         </DropdownMenuItem>
