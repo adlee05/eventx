@@ -18,6 +18,9 @@ function Events() {
   const [events, setEvents] = useState<EventProps[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // filter tags 
+  const [categories, setCategories] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -40,7 +43,7 @@ function Events() {
     };
 
     fetchEvents();
-  }, []);
+  }, [showNotification]);
 
   if (loading) {
     return <div className="flex justify-center">
@@ -57,7 +60,7 @@ function Events() {
             <p className="text-base">View all available events</p>
           </div>
           <div>
-            <Filters />
+            <Filters categories={categories} setCategories={setCategories} />
           </div>
         </div>
 
