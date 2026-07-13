@@ -523,6 +523,90 @@ async function getRegistrations(req: Request, res: Response) {
   }
 }
 
+async function removeRegistration(req: Request, res: Response) {
+  const { id, userId } = req.params;
+
+  try {
+    // verify event exists and requester is the owner
+    const event = await EventModel.findById(id).select("createdBy");
+
+    if (!event) {
+      return res.status(404).json({
+        message: "Event not found",
+        success: false,
+      });
+    }
+
+    if (!event.createdBy.equals(req.user.userId)) {
+      return res.status(403).json({
+        message: "Unauthorized!",
+        success: false,
+      });
+    }
+
+    const registrationCount = await mongoose.connection.transaction(async () => {
+      const registration = await RegistrationModel.findOneAndDelete({
+        userId,
+        eventId: id,
+      });
+
+      if (!registration) {
+        throw new Error("NO_REGISTRATION");
+      }
+
+      const updatedEvent = await EventModel.findOneAndUpdate(
+        {
+          _id: id,
+          registrationCount: { $gt: 0 },
+        },
+        {
+          $inc: { registrationCount: -1 },
+        },
+        {
+          new: true,
+        }
+      );
+
+      if (!updatedEvent) {
+        throw new Error("UNABLE_TO_UPDATE");
+      }
+
+      return updatedEvent.registrationCount;
+    });
+
+    return res.status(200).json({
+      message: "Participant removed successfully",
+      data: {
+        registrationCount,
+      },
+      success: true,
+    });
+  } catch (e) {
+    console.error(e);
+
+    if (e instanceof Error) {
+      switch (e.message) {
+        case "NO_REGISTRATION":
+          return res.status(200).json({
+            message: "User was not registered",
+            success: true,
+          });
+
+        case "UNABLE_TO_UPDATE":
+          return res.status(500).json({
+            message: "Unable to update registration count",
+            success: false,
+          });
+      }
+    }
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+}
+
 export {
   addEvent,
   getAllEvents,
@@ -531,5 +615,6 @@ export {
   deleteRegistration,
   archiveEvent,
   editEvent,
-  getRegistrations
+  getRegistrations,
+  removeRegistration
 };

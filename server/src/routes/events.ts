@@ -10,7 +10,8 @@ import {
   deleteRegistration,
   archiveEvent,
   editEvent,
-  getRegistrations
+  getRegistrations,
+  removeRegistration
 } from "../controllers/events.js";
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.post("/register", authenticate, register);
 router.post("/addEvent", authenticate, addEvent);
 
 router.delete("/deleteRegistration", authenticate, deleteRegistration);
+router.delete("/:id/removeRegistration/:userId", authenticate, removeRegistration);
 
 router.patch("/:id/archive", authenticate, archiveEvent);
 router.patch("/:id/edit", authenticate, editEvent);

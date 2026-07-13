@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { EventSettings } from "@/components/eventSettings";
 import { AuthContext } from "@/context/AuthContext";
 import { ConfirmDelete } from "@/components/ConfirmDelete";
+import { type participantType } from "@/types/eventPage.participants";
 
 function EventPage() {
   // badges
@@ -46,7 +47,7 @@ function EventPage() {
 
   // registrations states
   const [showRegistrations, setShowRegistrations] = useState(false);
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState<participantType[]>([]);
   const [participantsLoading, setParticipantsLoading] = useState(false);
   const [participantsLoaded, setParticipantsLoaded] = useState(false);
 
@@ -396,7 +397,7 @@ function EventPage() {
             <Spinner />
           ) : (
             <div>
-              {participants.map((participant: any) => (
+              {participants.map((participant: participantType) => (
                 <Card key={participant.id} className="mb-3">
                   <CardContent className="py-4 flex justify-between">
                     <div>
@@ -405,7 +406,24 @@ function EventPage() {
                         {participant.email}
                       </p>
                     </div>
-                    <ConfirmDelete userId={participant.id} id={id} />
+                    <ConfirmDelete
+                      userId={participant.id}
+                      id={id}
+                      onDelete={() => {
+                        setParticipants(prev =>
+                          prev.filter(p => p.id !== participant.id)
+                        );
+
+                        setDetails(prev => {
+                          if (!prev) return prev;
+
+                          return {
+                            ...prev,
+                            registrationCount: prev.registrationCount - 1
+                          };
+                        });
+                      }}
+                    />
                   </CardContent>
                 </Card>
               ))}

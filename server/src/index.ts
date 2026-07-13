@@ -40,7 +40,7 @@ async function startServer() {
       console.log(`Server is running on PORT:${PORT}`);
     })
   } catch (e) {
-    console.log("connection to mongoose failed ", e);
+    console.log("connection to MongoDB failed ", e);
     process.exit(1);
   }
 }

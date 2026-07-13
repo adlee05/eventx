@@ -14,20 +14,18 @@ import axios, { AxiosError } from "axios";
 import { NotifyContext } from "@/context/notifyContext";
 import { useContext } from "react";
 
-export function ConfirmDelete({ userId, id }: { userId: string, id: string | undefined }) {
+export function ConfirmDelete({ userId, id, onDelete }: { userId: string, id: string | undefined, onDelete: () => void; }) {
   const notifyContext = useContext(NotifyContext);
   if (!notifyContext) {
     throw new Error("Cannot use context outside its scope.");
   }
+
+  console.log(userId, id);
   const [, showNotification] = notifyContext;
 
   const handleDeleteRegistration = async () => {
     try {
-      const res = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/event/:${id}/removeRegistration/:${userId}`, {
-        data: {
-          userId: userId,
-          eventId: id
-        },
+      const res = await axios.delete(`${import.meta.env.VITE_SERVER_URI}/event/${id}/removeRegistration/${userId}`, {
         withCredentials: true
       })
 
@@ -38,6 +36,8 @@ export function ConfirmDelete({ userId, id }: { userId: string, id: string | und
           type: "success"
         })
       }
+
+      onDelete();
     } catch (e) {
       console.error(e);
 
