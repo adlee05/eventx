@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { EventSettings } from "@/components/eventSettings";
 import { AuthContext } from "@/context/AuthContext";
+import { ConfirmDelete } from "@/components/ConfirmDelete";
 
 function EventPage() {
   // badges
@@ -396,12 +397,15 @@ function EventPage() {
           ) : (
             <div>
               {participants.map((participant: any) => (
-                <Card key={participant._id} className="mb-3">
-                  <CardContent className="py-4">
-                    <p className="font-medium">{participant.username}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {participant.email}
-                    </p>
+                <Card key={participant.id} className="mb-3">
+                  <CardContent className="py-4 flex justify-between">
+                    <div>
+                      <p className="font-medium">{participant.username}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {participant.email}
+                      </p>
+                    </div>
+                    <ConfirmDelete userId={participant.id} id={id} />
                   </CardContent>
                 </Card>
               ))}
