@@ -6,7 +6,7 @@ import { RegistrationModel } from "../models/registrations.js";
 import { MongoServerError } from "mongodb";
 import { registrationSchema } from "../schemas/event.registration.js";
 import { success } from "zod";
-import mongoose from "mongoose";
+import mongoose, { QueryFilter } from "mongoose";
 import { error } from "node:console";
 
 // so that we don't need to pass session object to every db instruction in the transaction
@@ -64,27 +64,66 @@ async function addEvent(req: Request, res: Response) {
   })
 }
 
-// get all available events
 async function getAllEvents(req: Request, res: Response) {
+  console.log(req.query);
+
   try {
-    const allEvents = await EventModel.find({
+    const {
+      category,
+      search,
+      page = "1",
+      limit = "12",
+    } = req.query;
+
+    const filter: any = {
+      archived: false,
       deadDate: { $gt: new Date() },
-      archived: false
-    })
+    };
+
+    // category filter
+    if (category) {
+      filter.category = {
+        $in: Array.isArray(category) ? category : [category],
+      };
+    }
+
+    // search filter
+    if (search) {
+      filter.title = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const events = await EventModel.find(filter)
       .select("title description category imageUrl location startDate _id")
-      .sort({ startDate: -1 });
+      .sort({ startDate: 1 })
+      .skip(skip)
+      .limit(limitNumber);
+
+    const total = await EventModel.countDocuments(filter);
 
     return res.status(200).json({
-      message: "All events fetched successfully!",
+      message: "Events fetched successfully!",
       success: true,
-      data: allEvents,
+      data: events,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        pages: Math.ceil(total / limitNumber),
+      },
     });
-
   } catch (error) {
-    console.error("Error fetching all events!", error);
+    console.error("Error fetching events:", error);
+
     return res.status(500).json({
       message: "Failed to fetch events!",
-      success: false
+      success: false,
     });
   }
 }

@@ -15,6 +15,8 @@ import profile from "./routes/profile.js";
 const app = express();
 const PORT = Number(envs.port);
 
+app.set("query parser", "extended");
+
 // middleware
 app.use(cors({
   origin: 'http://localhost:5173',
