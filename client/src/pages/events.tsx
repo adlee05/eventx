@@ -7,6 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 // types
 import type { EventProps } from "@/types/event-props";
+import type { FiltersType } from "@/types/events.filter";
 
 function Events() {
   const notifyContext = useContext(NotifyContext);
@@ -19,14 +20,32 @@ function Events() {
   const [loading, setLoading] = useState(true);
 
   // filter tags 
-  const [categories, setCategories] = useState<string[]>([]);
+  const [filters, setFilters] = useState<FiltersType>({
+    categories: [] as string[],
+    search: "",
+    page: 1,
+    limit: 12,
+    sort: "startDate",
+    order: "asc",
+  })
 
+  // filter side effect
   useEffect(() => {
-    const fetchEvents = async () => {
+    const getEvents = async () => {
+      setLoading(true);
+
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_SERVER_URI}/event/allEvents`, { withCredentials: true }
-        );
+        const res = await axios.get(`${import.meta.env.VITE_SERVER_URI}/event/allEvents`, {
+          withCredentials: true,
+          params: {
+            category: filters.categories,
+            page: filters.page,
+            search: filters.search,
+            limit: filters.limit,
+            sort: filters.sort,
+            order: filters.order
+          }
+        })
 
         setEvents(res.data.data);
       } catch (e) {
@@ -38,12 +57,12 @@ function Events() {
           });
         }
       } finally {
-        setLoading(false); // stop loading no matter what
+        setLoading(false);
       }
-    };
+    }
 
-    fetchEvents();
-  }, [showNotification]);
+    getEvents();
+  }, [filters, showNotification])
 
   if (loading) {
     return <div className="flex justify-center">
@@ -60,14 +79,14 @@ function Events() {
             <p className="text-base">View all available events</p>
           </div>
           <div>
-            <Filters categories={categories} setCategories={setCategories} />
+            <Filters filters={filters} setFilters={setFilters} />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
-          {events.map((event, i) => (
+          {events.map((event) => (
             <EventCard
-              key={i}
+              key={event._id}
               title={event.title}
               _id={event._id}
               description={event.description}

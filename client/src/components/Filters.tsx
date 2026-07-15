@@ -14,11 +14,12 @@ import {
   FieldSet,
 } from "@/components/ui/field"
 import { type SetStateAction } from "react"
+import { type FiltersType } from "@/types/events.filter"
 
 // comp
-export function Filters({ categories, setCategories }: {
-  categories: string[],
-  setCategories: React.Dispatch<SetStateAction<string[]>>
+export function Filters({ filters, setFilters }: {
+  filters: FiltersType,
+  setFilters: React.Dispatch<SetStateAction<FiltersType>>
 }) {
   return (
     <Popover>
@@ -26,23 +27,29 @@ export function Filters({ categories, setCategories }: {
         <Button variant="outline">Filters</Button>
       </PopoverTrigger>
       <PopoverContent align="end">
-        <CheckboxGroup categories={categories} setCategories={setCategories} />
+        <CheckboxGroup filters={filters} setFilters={setFilters} />
       </PopoverContent>
-    </Popover>
+    </Popover >
   )
 }
 
-export function CheckboxGroup({ categories, setCategories }: {
-  categories: string[],
-  setCategories: React.Dispatch<SetStateAction<string[]>>
+export function CheckboxGroup({ filters, setFilters }: {
+  filters: FiltersType,
+  setFilters: React.Dispatch<SetStateAction<FiltersType>>
 }) {
   const categoryOptions = ["art", "recreational", "tech"];
 
   const handleCategoryChange = (category: string, checked: boolean) => {
     if (checked) {
-      setCategories(prev => [...prev, category]);
+      setFilters((prev) => ({
+        ...prev,
+        categories: [...prev.categories, category]     // push returns length, use concat or spread prev categories arr
+      }))
     } else {
-      setCategories(prev => prev.filter(c => c !== category));
+      setFilters((prev) => ({
+        ...prev,
+        categories: prev.categories.filter(c => c !== category)
+      }))
     }
   };
 
@@ -58,7 +65,7 @@ export function CheckboxGroup({ categories, setCategories }: {
         {categoryOptions.map(category => (
           <Field orientation="horizontal" key={category}>
             <Checkbox
-              checked={categories.includes(category)}
+              checked={filters.categories.includes(category)}
               onCheckedChange={(checked) => {
                 handleCategoryChange(category, checked === true)
               }}
