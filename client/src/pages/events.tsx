@@ -21,12 +21,10 @@ function Events() {
 
   // filter tags 
   const [filters, setFilters] = useState<FiltersType>({
-    categories: [] as string[],
+    categories: [],
     search: "",
     page: 1,
     limit: 12,
-    sort: "startDate",
-    order: "asc",
   })
 
   // filter side effect
@@ -42,8 +40,6 @@ function Events() {
             page: filters.page,
             search: filters.search,
             limit: filters.limit,
-            sort: filters.sort,
-            order: filters.order
           }
         })
 
@@ -64,12 +60,6 @@ function Events() {
     getEvents();
   }, [filters, showNotification])
 
-  if (loading) {
-    return <div className="flex justify-center">
-      <Spinner className="size-10" />
-    </div>
-  }
-
   return (
     <>
       <div className="mx-4 sm:mx-auto max-w-5xl my-10">
@@ -83,20 +73,26 @@ function Events() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
-          {events.map((event) => (
-            <EventCard
-              key={event._id}
-              title={event.title}
-              _id={event._id}
-              description={event.description}
-              location={event.location}
-              category={event.category}
-              imageUrl={event.imageUrl}
-              startDate={event.startDate}
-            />
-          ))}
+        {!loading ? (
+          events.length == 0 ? <p className="text-center">No events to display</p> :
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
+              {events.map((event) => (
+                <EventCard
+                  key={event._id}
+                  title={event.title}
+                  _id={event._id}
+                  description={event.description}
+                  location={event.location}
+                  category={event.category}
+                  imageUrl={event.imageUrl}
+                  startDate={event.startDate}
+                />
+              ))}
+            </div>
+        ) : <div className="flex justify-center">
+          <Spinner className="size-10" />
         </div>
+        }
       </div>
     </>
   );
