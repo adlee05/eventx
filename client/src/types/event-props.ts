@@ -6,5 +6,6 @@ export interface EventProps {
   description: string,
   location: string,
   imageUrl: string,
+  archived: string
 };
 

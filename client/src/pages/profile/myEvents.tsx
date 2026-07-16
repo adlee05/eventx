@@ -67,6 +67,7 @@ function MyEvents() {
             category={event.category}
             imageUrl={event.imageUrl}
             startDate={event.startDate}
+            archived={event.archived}
           />
         ))
       }

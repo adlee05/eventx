@@ -12,7 +12,7 @@ export function EventCard(props: EventProps) {
     tech: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 mb-1",
     recreational: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300 mb-1",
     art: "bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 mb-1",
-    archived: "bg-gray-50 text-purple-700 dark:bg-gray-950 dark:text-purple-300 mb-1",
+    archived: "bg-red-100 text-red-700 dark:bg-white dark:text-red-700 mb-3",
   }
 
   const imgUrl = (
@@ -36,6 +36,10 @@ export function EventCard(props: EventProps) {
             <Badge className={categoryColors[props.category]}>
               {props.category}
             </Badge>
+            {props.archived ? <Badge className={categoryColors["archived"]}>
+              archived
+            </Badge> : ""}
+
           </div>
           <h1 className="font-semibold text-sm md:text-lg text-white leading-snug drop-shadow-md">
             {props.title}
