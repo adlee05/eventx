@@ -8,6 +8,7 @@ import { registrationSchema } from "../schemas/event.registration.js";
 import { success } from "zod";
 import mongoose, { QueryFilter } from "mongoose";
 import { error } from "node:console";
+import { getAllEventsQuerySchema } from "../schemas/event.allEvents.js";
 
 // so that we don't need to pass session object to every db instruction in the transaction
 mongoose.set('transactionAsyncLocalStorage', true);
@@ -65,29 +66,32 @@ async function addEvent(req: Request, res: Response) {
 }
 
 async function getAllEvents(req: Request, res: Response) {
-  console.log(req.query);
-
   try {
-    const {
-      category,
-      search,
-      page = "1",
-      limit = "12",
-    } = req.query;
+    const parsed = getAllEventsQuerySchema.safeParse(req.query);
 
-    const filter: any = {
+    if (!parsed.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid query parameters.",
+        errors: parsed.error.flatten().fieldErrors,
+      });
+    }
+
+    const { page, limit, search, category } = parsed.data;
+
+    const filter: Record<string, unknown> = {
       archived: false,
-      deadDate: { $gt: new Date() },
+      deadDate: {
+        $gt: new Date(),
+      },
     };
 
-    // category filter
     if (category) {
       filter.category = {
         $in: Array.isArray(category) ? category : [category],
       };
     }
 
-    // search filter
     if (search) {
       filter.title = {
         $regex: search,
@@ -95,35 +99,34 @@ async function getAllEvents(req: Request, res: Response) {
       };
     }
 
-    const pageNumber = Number(page);
-    const limitNumber = Number(limit);
-    const skip = (pageNumber - 1) * limitNumber;
+    const skip = (page - 1) * limit;
 
-    const events = await EventModel.find(filter)
-      .select("title description category imageUrl location startDate _id")
-      .sort({ startDate: 1 })
-      .skip(skip)
-      .limit(limitNumber);
-
-    const total = await EventModel.countDocuments(filter);
+    const [events, total] = await Promise.all([
+      EventModel.find(filter)
+        .select("title description category imageUrl location startDate _id")
+        .sort({ startDate: 1 })
+        .skip(skip)
+        .limit(limit),
+      EventModel.countDocuments(filter),
+    ]);
 
     return res.status(200).json({
-      message: "Events fetched successfully!",
       success: true,
+      message: "Events fetched successfully!",
       data: events,
       pagination: {
-        page: pageNumber,
-        limit: limitNumber,
+        page,
+        limit,
         total,
-        pages: Math.ceil(total / limitNumber),
+        pages: Math.ceil(total / limit),
       },
     });
   } catch (error) {
     console.error("Error fetching events:", error);
 
     return res.status(500).json({
-      message: "Failed to fetch events!",
       success: false,
+      message: "Failed to fetch events!",
     });
   }
 }
