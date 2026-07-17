@@ -13,20 +13,21 @@ import {
   getRegistrations,
   removeRegistration
 } from "../controllers/events.js";
+import { publicRoutes, registerForEvent, deregister, createEventLimiter, editEventLimiter } from "../middleware/limiters.js";
 
 const router = express.Router();
 
-router.get("/allEvents", getAllEvents);
-router.get("/:id", optionalAuth, eventById);
+router.get("/allEvents", publicRoutes, getAllEvents);
+router.get("/:id", optionalAuth, publicRoutes, eventById);
 router.get("/:id/registrations", authenticate, getRegistrations);
 
-router.post("/register", authenticate, register);
-router.post("/addEvent", authenticate, addEvent);
+router.post("/register", authenticate, registerForEvent, register);
+router.post("/addEvent", authenticate, createEventLimiter, addEvent);
 
 router.delete("/deleteRegistration", authenticate, deleteRegistration);
 router.delete("/:id/removeRegistration/:userId", authenticate, removeRegistration);
 
 router.patch("/:id/archive", authenticate, archiveEvent);
-router.patch("/:id/edit", authenticate, editEvent);
+router.patch("/:id/edit", authenticate, editEventLimiter, editEvent);
 
 export default router;

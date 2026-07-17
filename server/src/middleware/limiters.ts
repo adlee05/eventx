@@ -59,4 +59,20 @@ const contact = rateLimit({
   keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
 })
 
-export { loginLimiter, createEventLimiter, editEventLimiter, registerForEvent, deregister, publicRoutes, contact };
+const profileLimiter = rateLimit({
+  windowMs: minute,
+  max: 60,
+  message: message,
+  keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
+})
+
+export {
+  loginLimiter,
+  createEventLimiter,
+  editEventLimiter,
+  registerForEvent,
+  deregister,
+  publicRoutes,
+  contact,
+  profileLimiter
+};

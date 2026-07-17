@@ -116,7 +116,7 @@ async function getMyEvents(req: Request, res: Response) {
   try {
     const myEvents = await EventModel
       .find({ createdBy: req.user.userId })
-      .select("title description category imageUrl location startDate _id")
+      .select("title description category imageUrl location startDate _id archived")
       .sort({ startDate: -1 })
 
     return res.status(200).json({

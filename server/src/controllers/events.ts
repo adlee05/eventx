@@ -107,6 +107,7 @@ async function getAllEvents(req: Request, res: Response) {
         .sort({ startDate: 1 })
         .skip(skip)
         .limit(limit),
+
       EventModel.countDocuments(filter),
     ]);
 
