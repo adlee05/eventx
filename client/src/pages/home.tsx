@@ -97,7 +97,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
           {features.map((feature) => {
             const Icon = feature.icon;
 
@@ -131,7 +131,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="mt-20 grid gap-10 lg:grid-cols-4">
+        <div className="mt-20 grid gap-10 lg:grid-cols-4 text-center">
           {steps.map((step) => (
             <div key={step.number} className="relative">
               <div className="mb-6 text-6xl font-bold text-muted-foreground/20">
@@ -148,30 +148,6 @@ export default function Home() {
               )}
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* STATS SECTION */}
-      <section className="border-y border-border bg-muted/30 py-24">
-        <div className="mx-auto grid max-w-6xl gap-10 px-6 text-center sm:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <h3 className="text-5xl font-bold tracking-tight text-foreground">500+</h3>
-            <p className="mt-3 text-muted-foreground font-medium">
-              Events Hosted
-            </p>
-          </div>
-          <div>
-            <h3 className="text-5xl font-bold tracking-tight text-foreground">10k+</h3>
-            <p className="mt-3 text-muted-foreground font-medium">
-              Registrations
-            </p>
-          </div>
-          <div>
-            <h3 className="text-5xl font-bold tracking-tight text-foreground">150+</h3>
-            <p className="mt-3 text-muted-foreground font-medium">
-              Organizers
-            </p>
-          </div>
         </div>
       </section>
 

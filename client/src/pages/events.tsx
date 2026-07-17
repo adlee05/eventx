@@ -28,6 +28,15 @@ function Events() {
     limit: 12,
   })
 
+  // total pages 
+  const [totalEvents, setTotalEvents] = useState<number>(0);
+  const start = (filters.page - 1) * filters.limit + 1;
+
+  const end = Math.min(
+    filters.page * filters.limit,
+    totalEvents
+  );
+
   // filter side effect
   useEffect(() => {
     const getEvents = async () => {
@@ -45,6 +54,7 @@ function Events() {
         })
 
         setEvents(res.data.data);
+        setTotalEvents(res.data.pagination.total);
       } catch (e) {
         if (e instanceof AxiosError) {
           showNotification({
@@ -77,20 +87,27 @@ function Events() {
 
           {!loading ? (
             events.length == 0 ? <p className="text-center">No events to display</p> :
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
-                {events.map((event) => (
-                  <EventCard
-                    key={event._id}
-                    title={event.title}
-                    _id={event._id}
-                    description={event.description}
-                    location={event.location}
-                    category={event.category}
-                    imageUrl={event.imageUrl}
-                    startDate={event.startDate}
-                    archived={event.archived}
-                  />
-                ))}
+              <div className="flex flex-col gap-10">
+                <p className="text-sm text-muted-foreground">
+                  Showing {start}–{end} of {totalEvents} events
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-5 sm:gap-y-10 sm:gap-x-10 justify-items-center">
+                  {events.map((event) => (
+                    <EventCard
+                      key={event._id}
+                      title={event.title}
+                      _id={event._id}
+                      description={event.description}
+                      location={event.location}
+                      category={event.category}
+                      imageUrl={event.imageUrl}
+                      startDate={event.startDate}
+                      archived={event.archived}
+                    />
+                  ))}
+                </div>
+
               </div>
           ) : <div className="flex justify-center">
             <Spinner className="size-10" />
@@ -98,7 +115,7 @@ function Events() {
           }
         </div>
 
-        <PaginationComp />
+        <PaginationComp filters={filters} setFilters={setFilters} totalEvents={totalEvents} />
       </div>
     </>
   );
