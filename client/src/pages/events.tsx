@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios";
 import { NotifyContext } from "@/context/notifyContext";
 import { Filters } from "@/components/Filters";
 import { Spinner } from "@/components/ui/spinner";
+import { Input } from "@/components/ui/input";
 
 // types
 import type { EventProps } from "@/types/event-props";
@@ -31,6 +32,9 @@ function Events() {
   // total pages 
   const [totalEvents, setTotalEvents] = useState<number>(0);
   const start = (filters.page - 1) * filters.limit + 1;
+
+  // search 
+  const [search, setSearch] = useState("");
 
   const end = Math.min(
     filters.page * filters.limit,
@@ -71,19 +75,40 @@ function Events() {
     getEvents();
   }, [filters, showNotification])
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters((prev) => ({
+        ...prev,
+        search,
+        page: 1,
+      }));
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
   return (
     <>
-      <div className="mx-4 sm:mx-auto max-w-5xl my-10 flex flex-col gap-20">
+      <div className="mx-4 sm:mx-auto max-w-5xl my-10 flex flex-col gap-10">
         <div>
           <div className="greeting my-10 flex justify-between sm:text-left">
             <div>
               <h1 className="text-lg font-bold">Events</h1>
               <p className="text-base">View all available events</p>
             </div>
+
             <div>
               <Filters filters={filters} setFilters={setFilters} />
             </div>
+
           </div>
+
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search for Events"
+            className="mb-10"
+          />
 
           {!loading ? (
             events.length == 0 ? <p className="text-center">No events to display</p> :
