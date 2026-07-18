@@ -14,7 +14,7 @@ import { zodSignUp, zodLogin } from "../schemas/auth.schema.js";
 const cookieOpts = {
   httpOnly: true,
   secure: envs.env_type == "production",
-  sameSite: "strict" as const,
+  sameSite: "none",
   path: '/'
 }
 
