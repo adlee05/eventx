@@ -59,7 +59,7 @@ function Login() {
           if (axios.isAxiosError(e)) {
             showNotification({
               title: "Loading context failed",
-              desc: "Reload the page once.",
+              desc: e.response?.data?.message,
               type: "failure"
             })
           }
