@@ -13,7 +13,7 @@ import { zodSignUp, zodLogin } from "../schemas/auth.schema.js";
 // cookie options
 const cookieOpts = {
   httpOnly: true,
-  secure: envs.env_type == "prod",
+  secure: envs.env_type == "production",
   sameSite: "strict" as const,
   path: '/'
 }

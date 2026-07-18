@@ -19,7 +19,7 @@ app.set("query parser", "extended");
 
 // middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:4173',
   credentials: true,
   methods: ["GET", "PUT", "POST", "DELETE", "PATCH"]
 }));

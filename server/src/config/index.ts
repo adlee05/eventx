@@ -16,7 +16,7 @@ const envSchema = z.object({
   jwt_secret: z.string().min(32),
   port: z.coerce.number().default(5000),
   mongo_local: z.string().min(1),
-  env_type: z.enum(["dev", "prod", "test"]),
+  env_type: z.enum(["development", "production", "test"]),
 });
 
 const envs = envSchema.parse({
