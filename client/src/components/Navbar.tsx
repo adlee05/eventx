@@ -37,7 +37,7 @@ export default function NavbarComp() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="relative w-full z-100 cursor-pointer">
+    <div className="relative w-full z-10 cursor-pointer">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
@@ -92,7 +92,7 @@ export default function NavbarComp() {
                 </div> : <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
                   <NavbarButton variant="primary">Login</NavbarButton>
                 </Link>}
-              {<NavbarButton variant="secondary"><ModeToggle /></NavbarButton>}
+              <ModeToggle />
             </div>
           </MobileNavMenu>
         </MobileNav>
