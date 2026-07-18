@@ -39,8 +39,9 @@ function Contact() {
       })
       return;
     }
+
     try {
-      const res = await axios.post('http://localhost:5000/contact',
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/contact`,
         { issue: issue, message: message },
         { withCredentials: true }
       );
