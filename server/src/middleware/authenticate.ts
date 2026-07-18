@@ -10,9 +10,6 @@ import { userJwtPayload } from "../types/jwt.js";
 async function authenticate(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies.auth_token;
 
-  console.log("Cookies:", req.cookies);
-  console.log("Token:", req.cookies.auth_token);
-
   if (!envs.jwt_secret) {
     throw new Error("JWT secret not configured");
   }

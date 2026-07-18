@@ -19,7 +19,7 @@ app.set("query parser", "extended");
 
 // middleware
 app.use(cors({
-  origin: ['http://localhost:4173', 'http://localhost:5173', 'https://eventx-rho.vercel.app'],
+  origin: ['http://localhost:5173', 'https://eventx-rho.vercel.app', 'https://eventx.adlee05.me'],
   credentials: true,
   methods: ["GET", "PUT", "POST", "DELETE", "PATCH"]
 }));
