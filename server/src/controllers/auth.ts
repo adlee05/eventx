@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { UserModel } from "../models/user.js";
 import envs from "../config/index.js";
+import type { CookieOptions } from "express";
 
 // type 
 import type { Request, Response } from "express";
@@ -11,12 +12,12 @@ import { zodSignUp, zodLogin } from "../schemas/auth.schema.js";
 
 
 // cookie options
-const cookieOpts = {
+const cookieOpts: CookieOptions = {
   httpOnly: true,
-  secure: envs.env_type == "production",
-  sameSite: "none",
-  path: '/'
-}
+  secure: envs.env_type === "production",
+  sameSite: envs.env_type === "production" ? "none" : "lax",
+  path: "/",
+};
 
 async function login(req: Request, res: Response) {
   //validate input
