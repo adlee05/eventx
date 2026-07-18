@@ -1,7 +1,11 @@
 import { Request } from "express";
-import rateLimit from "express-rate-limit";
-import { success } from "zod/mini";
-import { me } from "../controllers/auth.js";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+
+const userKey = (req: Request) =>
+  `${ipKeyGenerator(req.ip!)}:${req.user.userId}`;
+
+const loginKey = (req: Request) =>
+  `${ipKeyGenerator(req.ip!)}:${req.body.email}`;
 
 const message = {
   message: "Too many attempts in a while, try again later",
@@ -13,35 +17,35 @@ const minute = 1 * 60 * 1000;
 
 const loginLimiter = rateLimit({
   windowMs: minute,
-  keyGenerator: (req: Request) => `${req.ip}:${req.body.email}`,
+  keyGenerator: loginKey,
   max: 5,
   message: message
 });
 
 const createEventLimiter = rateLimit({
   windowMs: hour,
-  keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
+  keyGenerator: userKey,
   max: 10,
   message: message
 })
 
 const editEventLimiter = rateLimit({
   windowMs: hour,
-  keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
+  keyGenerator: userKey,
   max: 30,
   message: message
 })
 
 const registerForEvent = rateLimit({
   windowMs: hour,
-  keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
+  keyGenerator: userKey,
   max: 10,
   message: message
 })
 
 const deregister = rateLimit({
   windowMs: hour,
-  keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
+  keyGenerator: userKey,
   max: 30,
   message: message
 })
@@ -56,14 +60,14 @@ const contact = rateLimit({
   windowMs: hour,
   max: 1,
   message: message,
-  keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
+  keyGenerator: userKey,
 })
 
 const profileLimiter = rateLimit({
   windowMs: minute,
   max: 60,
   message: message,
-  keyGenerator: (req: Request) => `${req.ip}:${req.user.userId}`,
+  keyGenerator: userKey,
 })
 
 export {
