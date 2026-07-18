@@ -15,7 +15,6 @@ const envSchema = z.object({
   mongo_uri: z.string().url(),
   jwt_secret: z.string().min(32),
   port: z.coerce.number().default(5000),
-  mongo_local: z.string().min(1),
   env_type: z.enum(["development", "production", "test"]),
 });
 
@@ -23,7 +22,6 @@ const envs = envSchema.parse({
   mongo_uri: process.env.MONGO_URL,
   jwt_secret: process.env.JWT_SECRET,
   port: process.env.PORT || 5000,
-  mongo_local: process.env.MONGO_LOCAL,
   env_type: process.env.NODE_ENV
 });
 
