@@ -22,7 +22,7 @@ const envSchema = z.object({
 const envs = envSchema.parse({
   mongo_uri: process.env.MONGO_URL,
   jwt_secret: process.env.JWT_SECRET,
-  port: process.env.PORT,
+  port: process.env.PORT || 5000,
   mongo_local: process.env.MONGO_LOCAL,
   env_type: process.env.NODE_ENV
 });
