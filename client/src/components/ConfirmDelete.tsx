@@ -20,7 +20,6 @@ export function ConfirmDelete({ userId, id, onDelete }: { userId: string, id: st
     throw new Error("Cannot use context outside its scope.");
   }
 
-  console.log(userId, id);
   const [, showNotification] = notifyContext;
 
   const handleDeleteRegistration = async () => {

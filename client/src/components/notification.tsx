@@ -24,13 +24,15 @@ function NotifyComp(props: notifyType) {
   const type = props.type == "success" ? "default" : "destructive";
 
   return (<>
-    <Alert variant={type} className={cn(
-      "md:max-w-sm fixed z-1000 top-0 right-0 m-4",
-      props.isActive
-        ? "animate-in fade-in slide-in-from-top-2 duration-300 opacity-100"
-        : "animate-out fade-out slide-out-to-top-2 duration-300 opacity-0 pointer-events-none"
-    )}>
-      {props.type == "success" ? <UserRoundCheck /> : <Ban />}
+    <Alert
+      variant={type}
+      className={cn(
+        "fixed top-4 z-1000 md:left-auto md:right-4 md:w-96",
+        props.isActive
+          ? "animate-in fade-in slide-in-from-top-2 duration-300"
+          : "animate-out fade-out slide-out-to-top-2 duration-300 opacity-0 pointer-events-none"
+      )}
+    >      {props.type == "success" ? <UserRoundCheck /> : <Ban />}
       <AlertTitle>
         {props.title}
       </AlertTitle>

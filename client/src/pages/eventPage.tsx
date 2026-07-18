@@ -59,7 +59,6 @@ function EventPage() {
         );
 
         if (res.data.success) {
-          console.log(res.data.data)
           setDetails(res.data.data);
         }
       } catch (e) {

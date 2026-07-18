@@ -10,7 +10,7 @@ const footerLinks = [
   },
   {
     label: "About",
-    to: '/about'
+    to: '/'
   },
   {
     label: "Contact",

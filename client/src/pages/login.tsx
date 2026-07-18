@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
 import { NotifyContext } from "@/context/notifyContext";
+import { AuthLayout } from "@/components/AuthLayout";
 
 // types
 import type { CredType } from "@/types/auth-card";
@@ -65,7 +66,6 @@ function Login() {
         }
         navigate("/", { replace: true })
       } else {
-        console.log("login failed!");
         showNotification({
           title: "Login failed",
           desc: res.data.error,
@@ -92,7 +92,7 @@ function Login() {
 
   return (
     <>
-      <div className="flex justify-center">
+      <AuthLayout>
         <AuthCard
           title="Login to your EventX account"
           description="Login in with you email and password"
@@ -102,7 +102,8 @@ function Login() {
           onChangeElem={handleChange}
           onSubmit={handleLogin}
         />
-      </div>
+      </AuthLayout>
+
     </>
   );
 }

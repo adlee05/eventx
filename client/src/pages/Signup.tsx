@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
 import { NotifyContext } from "@/context/notifyContext";
+import { AuthLayout } from "@/components/AuthLayout";
 
 // types
 import type { CredType } from "@/types/auth-card";
@@ -74,7 +75,7 @@ function SignUp() {
 
   return (
     <>
-      <div className="flex justify-center">
+      <AuthLayout>
         <AuthCard
           title="Sign Up to EventX"
           description="Sign Up with you email and password. Set a unique username"
@@ -84,7 +85,8 @@ function SignUp() {
           onChangeElem={handleChange}
           value={credentials}
         />
-      </div>
+      </AuthLayout>
+
     </>
   );
 }
