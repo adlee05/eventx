@@ -62,6 +62,7 @@ export default function PastEvents() {
           category={event.eventId.category}
           imageUrl={event.eventId.imageUrl}
           startDate={event.eventId.startDate}
+          archived={event.eventId.archived}
         />
       ))}
     </div>

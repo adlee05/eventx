@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useState, type Dispatch, type SetStateAction, useContext } from "react";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import axios, { AxiosError } from "axios";
 import { ChevronDown } from "lucide-react";
 import { NotifyContext } from "@/context/notifyContext";
@@ -94,7 +93,6 @@ function Contact() {
         </Field>
         <Button disabled={message.length == 0} className="w-fit mt-[1em]" onClick={handleSubmit}>Submit</Button>
       </div>
-      <BackgroundBeams className="-z-10" />
     </>
   );
 }

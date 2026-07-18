@@ -42,7 +42,7 @@ export function CalendarWithTime({ register, rhfName0, rhfName1, control, getVal
   };
 
   return (
-    <Card size="sm" className="mx-auto w-fit">
+    <Card className="mx-auto max-w-sm w-fit">
       <CardContent>
         <Controller
           name={rhfName0}
